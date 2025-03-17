@@ -1,0 +1,22 @@
+package dsm.wemeet.domain.friend.usecase
+
+import dsm.wemeet.domain.friend.service.CheckFriendService
+import dsm.wemeet.domain.friend.service.CommandFriendService
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.util.UUID
+
+@Service
+@Transactional
+class ApplyFriendUseCase(
+    private val checkFriendService: CheckFriendService,
+    private val commandFriendService: CommandFriendService
+) {
+
+    fun execute(userId: UUID): UUID {
+        checkFriendService.apply { }
+        commandFriendService.apply { }
+
+        return UUID.randomUUID()
+    }
+}

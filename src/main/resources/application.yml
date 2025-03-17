@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL:jdbc:mysql://localhost:3306/schema?characterEncoding=UTF-8&serverTimezone=UTC}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
+
+  jpa:
+    database: mysql
+
+    hibernate:
+      ddl-auto: validate
+
+jwt:
+  secret: ${SECRET_KEY:scretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfnscretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfnscretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfn}
