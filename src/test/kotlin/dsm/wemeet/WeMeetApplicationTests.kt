@@ -9,5 +9,4 @@ class WeMeetApplicationTests {
     @Test
     fun contextLoads() {
     }
-
 }

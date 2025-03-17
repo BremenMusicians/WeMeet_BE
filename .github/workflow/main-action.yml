@@ -1,0 +1,49 @@
+name: gradle-we-meet-main
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            build
+            --build-cache
+            --no-daemon
+
+      # Discord 알림
+      - name: Discord Alert Success
+        uses: sarisia/actions-status-discord@v1
+        if: success()
+        with:
+          webhook: ${{ secrets.DISCORD_PROD }}
+          description: "🥳 빌드가 성공적으로 완료되었습니다! 🥳"
+
+      - name: Discord Alert Failure
+        uses: sarisia/actions-status-discord@v1
+        if: failure()
+        with:
+          webhook: ${{ secrets.DISCORD_PROD }}
+          description: "🔥 빌드가 실패하였습니다. 🔥"
