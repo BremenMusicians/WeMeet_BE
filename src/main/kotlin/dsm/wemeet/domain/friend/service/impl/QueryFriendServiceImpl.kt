@@ -7,6 +7,4 @@ import org.springframework.stereotype.Service
 @Service
 class QueryFriendServiceImpl(
     private val friendJpaRepository: FriendJpaRepository
-) : QueryFriendService {
-
-}
+) : QueryFriendService

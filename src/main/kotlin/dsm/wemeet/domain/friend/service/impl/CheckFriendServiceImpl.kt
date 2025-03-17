@@ -7,6 +7,4 @@ import org.springframework.stereotype.Service
 @Service
 class CheckFriendServiceImpl(
     private val friendJpaRepository: FriendJpaRepository
-) : CheckFriendService {
-
-}
+) : CheckFriendService

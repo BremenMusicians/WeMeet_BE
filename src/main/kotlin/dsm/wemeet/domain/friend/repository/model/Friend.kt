@@ -13,5 +13,5 @@ class Friend(
     val id: UUID? = null,
 
     @Column(columnDefinition = "VARCHAR(4)", nullable = false)
-    val testColumn: String,
+    val testColumn: String
 )

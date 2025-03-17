@@ -1,6 +1,5 @@
 package dsm.wemeet.domain.friend.usecase
 
-import dsm.wemeet.domain.friend.repository.model.Friend
 import dsm.wemeet.domain.friend.service.CheckFriendService
 import dsm.wemeet.domain.friend.service.CommandFriendService
 import org.springframework.stereotype.Service
@@ -15,8 +14,8 @@ class ApplyFriendUseCase(
 ) {
 
     fun execute(userId: UUID): UUID {
-        checkFriendService.apply {  }
-        commandFriendService.apply {  }
+        checkFriendService.apply { }
+        commandFriendService.apply { }
 
         return UUID.randomUUID()
     }

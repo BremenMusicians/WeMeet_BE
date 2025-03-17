@@ -1,5 +1,3 @@
 package dsm.wemeet.domain.friend.service
 
-interface QueryFriendService {
-
-}
+interface QueryFriendService
