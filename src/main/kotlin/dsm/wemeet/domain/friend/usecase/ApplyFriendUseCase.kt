@@ -16,14 +16,8 @@ class ApplyFriendUseCase(
 
     fun execute(userId: UUID): UUID {
         checkFriendService.apply {  }
+        commandFriendService.apply {  }
 
-        val friend: Friend = commandFriendService.saveFriend(
-            Friend(
-                userId,
-                testColumn = "TEST"
-            )
-        )
-
-        return friend.id!!
+        return UUID.randomUUID()
     }
 }
