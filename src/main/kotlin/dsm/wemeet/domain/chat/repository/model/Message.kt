@@ -3,6 +3,8 @@ package dsm.wemeet.domain.chat.repository.model
 import dsm.wemeet.domain.user.repository.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -13,8 +15,9 @@ import java.util.UUID
 class Message(
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val id: UUID? = null,
+    val id: UUID,
 
     @ManyToOne(optional = false, targetEntity = Chat::class)
     @JoinColumn(name = "chat_id", referencedColumnName = "id", nullable = false)
