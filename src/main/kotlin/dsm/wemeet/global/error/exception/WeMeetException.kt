@@ -1,5 +1,5 @@
 import dsm.wemeet.global.error.exception.ErrorCode
 
-abstract class WeeMeetException(
+abstract class WeMeetException(
     val errorCode: ErrorCode
 ) : RuntimeException()

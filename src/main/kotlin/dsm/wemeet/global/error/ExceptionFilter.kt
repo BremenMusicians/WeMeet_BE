@@ -1,6 +1,6 @@
 package dsm.wemeet.global.error
 
-import WeeMeetException
+import WeMeetException
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -18,7 +18,7 @@ class ExceptionFilter(
     ) {
         try {
             filterChain.doFilter(request, response)
-        } catch (e: WeeMeetException) {
+        } catch (e: WeMeetException) {
             val errorCode = e.errorCode
             val errorResponse = ErrorResponse(errorCode.status, errorCode.message)
             writeErrorResponse(response, errorCode.status, errorResponse)
