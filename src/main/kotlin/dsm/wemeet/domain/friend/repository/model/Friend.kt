@@ -19,11 +19,11 @@ class Friend(
     val id: UUID,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(columnDefinition = "VARCHAR(50)", nullable = false, name = "proposer_email")
+    @JoinColumn(name = "proposer_email", referencedColumnName = "email", nullable = false)
     val proposer: User,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(columnDefinition = "VARCHAR(50)", nullable = false, name = "receiver_email")
+    @JoinColumn(name = "receiver_email", referencedColumnName = "email", nullable = false)
     val receiver: User,
 
     @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_accepted")
