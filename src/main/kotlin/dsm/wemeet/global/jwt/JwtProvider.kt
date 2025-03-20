@@ -69,8 +69,8 @@ class JwtProvider(
             .setIssuedAt(Date())
             .compact()
 
-    private fun isRefreshToken(token: String?): Boolean =
-        REFRESH == getJws(token!!).header["typ"].toString()
+    private fun isRefreshToken(token: String): Boolean =
+        REFRESH == getJws(token).header["typ"].toString()
 
     fun resolveToken(request: HttpServletRequest): String? =
         request.getHeader(jwtProperties.header)?.also {
