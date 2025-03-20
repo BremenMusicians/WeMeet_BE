@@ -1,7 +1,11 @@
 package dsm.wemeet.domain.room.repository.model
 
 import dsm.wemeet.domain.user.repository.model.User
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import java.util.UUID
 
 @Entity
@@ -9,9 +13,9 @@ class Room(
 
     @Id
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val id: UUID,
+    val id: UUID? = null,
 
-    @ManyToOne(optional = false, targetEntity = Room::class)
+    @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "owner", referencedColumnName = "email", nullable = false)
     val owner: User,
 

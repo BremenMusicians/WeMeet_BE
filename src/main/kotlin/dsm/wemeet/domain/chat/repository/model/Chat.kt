@@ -1,8 +1,12 @@
 package dsm.wemeet.domain.chat.repository.model
 
 import dsm.wemeet.domain.user.repository.model.User
-import jakarta.persistence.*
-import java.util.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import java.util.UUID
 
 @Entity
 class Chat(
@@ -12,10 +16,10 @@ class Chat(
     val id: UUID? = null,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(columnDefinition = "VARCHAR(50)", nullable = false, name = "user1_email")
-    val user1Email: String,
+    @JoinColumn(name = "user1_email", referencedColumnName = "id", nullable = false)
+    val user1: String,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(columnDefinition = "VARCHAR(50)", nullable = false, name = "user2_email")
-    val user2Email: String
+    @JoinColumn(name = "user2_email", referencedColumnName = "id", nullable = false)
+    val user2: String
 )
