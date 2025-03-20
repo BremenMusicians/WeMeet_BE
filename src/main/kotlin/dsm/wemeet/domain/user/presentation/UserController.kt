@@ -4,6 +4,7 @@ import dsm.wemeet.domain.user.presentation.dto.request.SignInRequest
 import dsm.wemeet.domain.user.presentation.dto.request.SignUpRequest
 import dsm.wemeet.domain.user.usecase.UserSignInUseCase
 import dsm.wemeet.domain.user.usecase.UserSignUpUseCase
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,7 +18,10 @@ class UserController(
 ) {
 
     @PostMapping("/signUp")
-    fun signUp(@RequestBody request: SignUpRequest) =
+    fun signUp(
+        @RequestBody @Valid
+        request: SignUpRequest
+    ) =
         userSignUpUseCase.execute(request)
 
     @PostMapping("/signIn")
