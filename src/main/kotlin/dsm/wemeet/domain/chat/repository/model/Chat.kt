@@ -20,9 +20,9 @@ class Chat(
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "user1_email", referencedColumnName = "id", nullable = false)
-    val user1: String,
+    val user1: User,
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "user2_email", referencedColumnName = "id", nullable = false)
-    val user2: String
+    val user2: User
 )
