@@ -10,8 +10,8 @@ class UserDetailService(
     private val queryUserService: QueryUserService
 ) : UserDetailsService {
 
-    override fun loadUserByUsername(accounId: String): UserDetails {
-        val user = queryUserService.queryUserByAccountId(accounId)
+    override fun loadUserByUsername(accountId: String): UserDetails {
+        val user = queryUserService.queryUserByAccountId(accountId)
             ?: throw Exception("Invalid Token")
 
         return UserDetails(user.accountId)
