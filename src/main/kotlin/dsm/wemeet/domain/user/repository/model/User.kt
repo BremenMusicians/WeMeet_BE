@@ -14,7 +14,7 @@ class User(
     @Column(columnDefinition = "CHAR(255)", nullable = false)
     val password: String,
 
-    @Column(columnDefinition = "VARCHAR(20)", nullable = false, name = "account_id")
+    @Column(columnDefinition = "VARCHAR(20)", nullable = false, name = "account_id", unique = true)
     val accountId: String,
 
     @Column(columnDefinition = "CHAR(255)", nullable = true)
@@ -23,6 +23,6 @@ class User(
     @Column(columnDefinition = "VARCHAR(255)", nullable = true, name = "about_me")
     val aboutMe: String,
 
-    @Column(columnDefinition = "VARCHAR(40)", nullable = true)
+    @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val position: String
 )
