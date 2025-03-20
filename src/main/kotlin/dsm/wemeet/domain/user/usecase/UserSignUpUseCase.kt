@@ -21,10 +21,10 @@ class UserSignUpUseCase(
 ) {
 
     fun execute(request: SignUpRequest): TokenResponse {
-        val accountExist = queryUserService.existByAccountId(request.accountId)
-        val emailExist = queryUserService.existByEmail(request.email)
+        val accountExists = queryUserService.existsByAccountId(request.accountId)
+        val emailExists = queryUserService.existsByEmail(request.email)
 
-        if (accountExist || emailExist) {
+        if (accountExists || emailExists) {
             throw UserAlreadyExistException
         }
 

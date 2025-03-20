@@ -15,9 +15,9 @@ class QueryUserServiceImpl(
     override fun queryUserByAccountId(accountId: String) =
         userJpaRepository.findByAccountId(accountId)
 
-    override fun existByEmail(email: String) =
+    override fun existsByEmail(email: String) =
         userJpaRepository.existsByEmail(email)
 
-    override fun existByAccountId(accountId: String) =
+    override fun existsByAccountId(accountId: String) =
         userJpaRepository.existsByAccountId(accountId)
 }
