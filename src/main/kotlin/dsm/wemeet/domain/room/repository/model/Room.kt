@@ -29,7 +29,7 @@ class Room(
     val maxMember: Int,
 
     @Column(columnDefinition = "VARCHAR(100)", nullable = false)
-    val describe: String,
+    val info: String,
 
     @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_public")
     val isPublic: Boolean,
