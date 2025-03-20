@@ -1,0 +1,32 @@
+package dsm.wemeet.domain.room.repository.model
+
+import dsm.wemeet.domain.user.repository.model.User
+import jakarta.persistence.*
+import java.util.UUID
+
+@Entity
+class Room(
+
+    @Id
+    @Column(columnDefinition = "BINARY(16)", nullable = false)
+    val id: UUID,
+
+    @ManyToOne(optional = false, targetEntity = Room::class)
+    @JoinColumn(name = "owner", referencedColumnName = "email", nullable = false)
+    val owner: User,
+
+    @Column(columnDefinition = "VARCHAR(20)", nullable = false)
+    val name: String,
+
+    @Column(columnDefinition = "TINYINT", nullable = false, name = "max_member")
+    val maxMember: Int,
+
+    @Column(columnDefinition = "VARCHAR(100)", nullable = false)
+    val describe: String,
+
+    @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_public")
+    val isPublic: Boolean,
+
+    @Column(columnDefinition = "SMALLINT", nullable = false)
+    val password: Int
+)
