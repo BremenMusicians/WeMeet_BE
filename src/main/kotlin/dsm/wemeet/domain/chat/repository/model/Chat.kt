@@ -1,4 +1,4 @@
-package dsm.wemeet.domain.friend.repository.model
+package dsm.wemeet.domain.chat.repository.model
 
 import dsm.wemeet.domain.user.repository.model.User
 import jakarta.persistence.Column
@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne
 import java.util.UUID
 
 @Entity
-class Friend(
+class Chat(
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -19,13 +19,10 @@ class Friend(
     val id: UUID,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(name = "proposer_email", referencedColumnName = "email", nullable = false)
-    val proposer: User,
+    @JoinColumn(name = "user1_email", referencedColumnName = "id", nullable = false)
+    val user1: User,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(name = "receiver_email", referencedColumnName = "email", nullable = false)
-    val receiver: User,
-
-    @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_accepted")
-    val isAccepted: Boolean
+    @JoinColumn(name = "user2_email", referencedColumnName = "id", nullable = false)
+    val user2: User
 )
