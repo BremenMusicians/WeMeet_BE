@@ -31,7 +31,6 @@ class Message(
     val sendAt: LocalDateTime = LocalDateTime.now(),
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    val content: String,
-
+    val content: String
 
 )
