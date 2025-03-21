@@ -1,10 +1,12 @@
 package dsm.wemeet.domain.user.presentation.dto.request
 
 import dsm.wemeet.domain.user.repository.model.Position
+import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
 data class SignUpRequest(
+    @field:Email
     val email: String,
 
     @field:Size(min = 4, max = 20)
