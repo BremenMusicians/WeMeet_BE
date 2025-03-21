@@ -9,5 +9,6 @@ enum class ErrorCode(
 
     USER_NOT_FOUND(404, "User Not Found"),
 
-    USER_ALREADY_EXISTS(409, "User already exists")
+    USER_ALREADY_EXISTS(409, "User already exists"),
+    FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
 }
