@@ -25,6 +25,9 @@ class UserController(
         userSignUpUseCase.execute(request)
 
     @PostMapping("/signIn")
-    fun signIn(@RequestBody request: SignInRequest) =
+    fun signIn(
+        @RequestBody @Valid
+        request: SignInRequest
+    ) =
         userSignInUseCase.execute(request)
 }
