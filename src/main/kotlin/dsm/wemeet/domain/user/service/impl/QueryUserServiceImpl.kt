@@ -3,13 +3,19 @@ package dsm.wemeet.domain.user.service.impl
 import dsm.wemeet.domain.user.exception.UserAlreadyExistException
 import dsm.wemeet.domain.user.exception.UserNotFoundException
 import dsm.wemeet.domain.user.repository.UserJpaRepository
+import dsm.wemeet.domain.user.repository.model.User
 import dsm.wemeet.domain.user.service.QueryUserService
+import dsm.wemeet.global.jwt.SecurityService
 import org.springframework.stereotype.Service
 
 @Service
 class QueryUserServiceImpl(
-    private val userJpaRepository: UserJpaRepository
+    private val userJpaRepository: UserJpaRepository,
+    private val securityService: SecurityService
 ) : QueryUserService {
+
+    override fun getCurrentUser(): User =
+        queryUserByEmail(securityService.getCurrentUserEmail())
 
     override fun queryUserByEmail(email: String) =
         userJpaRepository.findByEmail(email) ?: throw UserNotFoundException

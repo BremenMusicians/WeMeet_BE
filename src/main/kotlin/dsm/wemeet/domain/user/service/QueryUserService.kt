@@ -4,9 +4,11 @@ import dsm.wemeet.domain.user.repository.model.User
 
 interface QueryUserService {
 
-    fun queryUserByEmail(email: String): User?
+    fun getCurrentUser(): User
 
-    fun queryUserByAccountId(accountId: String): User?
+    fun queryUserByEmail(email: String): User
+
+    fun queryUserByAccountId(accountId: String): User
 
     fun existsByEmail(email: String)
 

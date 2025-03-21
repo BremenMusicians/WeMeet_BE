@@ -16,7 +16,7 @@ class Chat(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val id: UUID,
+    val id: UUID? = null,
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "user1_email", referencedColumnName = "email", nullable = false)

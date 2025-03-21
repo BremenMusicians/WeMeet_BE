@@ -16,7 +16,7 @@ class Friend(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val id: UUID,
+    val id: UUID? = null,
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "proposer_email", referencedColumnName = "email", nullable = false)
@@ -27,5 +27,5 @@ class Friend(
     val receiver: User,
 
     @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_accepted")
-    val isAccepted: Boolean
+    val isAccepted: Boolean = false
 )

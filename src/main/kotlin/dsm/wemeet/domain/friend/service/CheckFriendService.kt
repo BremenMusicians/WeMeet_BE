@@ -1,3 +1,8 @@
 package dsm.wemeet.domain.friend.service
 
-interface CheckFriendService
+import dsm.wemeet.domain.user.repository.model.User
+
+interface CheckFriendService {
+
+    fun checkIsFriend(user1: User, user2: User)
+}

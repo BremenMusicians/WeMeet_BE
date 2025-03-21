@@ -16,7 +16,7 @@ class Room(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(columnDefinition = "BINARY(16)", nullable = false)
-    val id: UUID,
+    val id: UUID? = null,
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "owner", referencedColumnName = "email", nullable = false)
