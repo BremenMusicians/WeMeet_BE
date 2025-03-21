@@ -20,7 +20,7 @@ class RequestFriendUseCase(
         val proposal = queryUserService.getCurrentUser()
         val receiver = queryUserService.queryUserByAccountId(accountId)
 
-        checkFriendService.checkIsNotFriend(proposal, receiver)
+        checkFriendService.checkIsFriend(proposal, receiver)
 
         commandFriendService.saveFriend(
             Friend(
