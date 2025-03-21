@@ -19,10 +19,10 @@ class Chat(
     val id: UUID,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(name = "user1_email", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user1_email", referencedColumnName = "email", nullable = false)
     val user1: User,
 
     @ManyToOne(optional = false, targetEntity = User::class)
-    @JoinColumn(name = "user2_email", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user2_email", referencedColumnName = "email", nullable = false)
     val user2: User
 )

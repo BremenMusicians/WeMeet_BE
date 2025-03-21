@@ -18,10 +18,10 @@ class User(
     val accountId: String,
 
     @Column(columnDefinition = "CHAR(255)", nullable = true)
-    val profile: String,
+    val profile: String? = null,
 
     @Column(columnDefinition = "VARCHAR(255)", nullable = true, name = "about_me")
-    val aboutMe: String,
+    val aboutMe: String? = null,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
     val position: String
