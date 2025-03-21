@@ -17,16 +17,13 @@ class QueryUserServiceImpl(
     override fun queryUserByAccountId(accountId: String) =
         userJpaRepository.findByAccountId(accountId) ?: throw UserNotFoundException
 
-    override fun existsByEmail(email: String): Boolean {
-        return checkExists(userJpaRepository.existsByEmail(email))
-    }
+    override fun existsByEmail(email: String) =
+        checkExists(userJpaRepository.existsByEmail(email))
 
-    override fun existsByAccountId(accountId: String): Boolean {
-        return checkExists(userJpaRepository.existsByAccountId(accountId))
-    }
+    override fun existsByAccountId(accountId: String) =
+        checkExists(userJpaRepository.existsByAccountId(accountId))
 
-    private fun checkExists(exists: Boolean): Boolean {
+    private fun checkExists(exists: Boolean) {
         if (exists) throw UserAlreadyExistException
-        return exists
     }
 }

@@ -33,6 +33,8 @@ class UserSignUpUseCase(
         return jwtProvider.generateToken(user.accountId)
     }
 
-    private fun existUser(email: String, accountId: String) =
-        queryUserService.existsByEmail(email) || queryUserService.existsByAccountId(accountId)
+    private fun existUser(email: String, accountId: String) {
+        queryUserService.existsByEmail(email)
+        queryUserService.existsByAccountId(accountId)
+    }
 }

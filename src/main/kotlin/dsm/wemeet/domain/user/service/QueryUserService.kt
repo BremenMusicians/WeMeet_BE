@@ -8,7 +8,7 @@ interface QueryUserService {
 
     fun queryUserByAccountId(accountId: String): User?
 
-    fun existsByEmail(email: String): Boolean
+    fun existsByEmail(email: String)
 
-    fun existsByAccountId(accountId: String): Boolean
+    fun existsByAccountId(accountId: String)
 }
