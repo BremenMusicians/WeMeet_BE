@@ -11,7 +11,7 @@ class CheckFriendServiceImpl(
     private val friendJpaRepository: FriendJpaRepository
 ) : CheckFriendService {
 
-    override fun checkIsAlreadyFriend(user1: User, user2: User) {
+    override fun checkIsNotFriend(user1: User, user2: User) {
         friendJpaRepository.findByAnyEmail(user1.email, user2.email)
             ?: throw FriendAlreadyExistsException
     }
