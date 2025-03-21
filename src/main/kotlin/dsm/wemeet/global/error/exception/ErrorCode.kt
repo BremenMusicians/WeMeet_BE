@@ -6,6 +6,8 @@ enum class ErrorCode(
 ) {
 
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
+    INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
+    EXPIRE_TOKEN_EXCEPTION(401, "Expire Token Exception"),
 
     USER_NOT_FOUND(404, "User Not Found"),
 
