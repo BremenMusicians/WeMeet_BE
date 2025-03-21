@@ -24,10 +24,8 @@ class RequestFriendUseCase(
 
         commandFriendService.saveFriend(
             Friend(
-                id = UUID.randomUUID(),
                 proposer = proposal,
-                receiver = receiver,
-                isAccepted = false
+                receiver = receiver
             )
         )
     }
