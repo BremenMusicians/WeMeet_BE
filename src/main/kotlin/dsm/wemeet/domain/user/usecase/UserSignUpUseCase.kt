@@ -1,6 +1,5 @@
 package dsm.wemeet.domain.user.usecase
 
-import dsm.wemeet.domain.user.exception.UserAlreadyExistException
 import dsm.wemeet.domain.user.presentation.dto.request.SignUpRequest
 import dsm.wemeet.domain.user.repository.model.User
 import dsm.wemeet.domain.user.service.QueryUserService
@@ -21,12 +20,7 @@ class UserSignUpUseCase(
 ) {
 
     fun execute(request: SignUpRequest): TokenResponse {
-        val accountExists = queryUserService.existsByAccountId(request.accountId)
-        val emailExists = queryUserService.existsByEmail(request.email)
-
-        if (accountExists || emailExists) {
-            throw UserAlreadyExistException
-        }
+        existUser(request.email, request.accountId)
 
         val user = saveUserService.save(
             User(
@@ -38,4 +32,7 @@ class UserSignUpUseCase(
         )
         return jwtProvider.generateToken(user.accountId)
     }
+
+    private fun existUser(email: String, accountId: String) =
+        queryUserService.existsByEmail(email) || queryUserService.existsByAccountId(accountId)
 }
