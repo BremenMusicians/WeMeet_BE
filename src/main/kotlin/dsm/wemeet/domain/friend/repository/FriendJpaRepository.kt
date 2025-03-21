@@ -10,7 +10,7 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
 
     @Query(
         """
-        SELECT 1
+        SELECT f
         FROM Friend as f
         WHERE f.proposer.email = :user1 AND f.receiver.email = :user2 OR
             f.receiver.email = :user1 AND f.proposer.email = :user2
