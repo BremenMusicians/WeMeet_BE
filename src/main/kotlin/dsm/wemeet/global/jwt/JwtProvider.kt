@@ -1,6 +1,8 @@
 package dsm.wemeet.global.jwt
 
 import dsm.wemeet.global.jwt.dto.response.TokenResponse
+import dsm.wemeet.global.jwt.exception.ExpireTokenException
+import dsm.wemeet.global.jwt.exception.InvalidTokenException
 import dsm.wemeet.global.jwt.repository.RefreshTokenJpaRepository
 import dsm.wemeet.global.jwt.repository.model.RefreshToken
 import io.jsonwebtoken.Claims
@@ -39,7 +41,7 @@ class JwtProvider(
 
     fun reIssue(refreshToken: String): TokenResponse {
         if (!isRefreshToken(refreshToken)) {
-            throw Error("Invalid refresh token")
+            throw InvalidTokenException
         }
 
         refreshTokenRepository.findByToken(refreshToken)
@@ -49,7 +51,7 @@ class JwtProvider(
                 val tokenResponse = generateToken(id)
                 token.update(tokenResponse.refreshToken, jwtProperties.refreshExp)
                 return TokenResponse(tokenResponse.accessToken, tokenResponse.refreshToken)
-            } ?: throw Error("Invalid refresh token")
+            } ?: throw InvalidTokenException
     }
 
     private fun generateAccessToken(id: String, type: String, exp: Long): String =
@@ -89,9 +91,9 @@ class JwtProvider(
         return try {
             Jwts.parserBuilder().setSigningKey(jwtProperties.secret).build().parseClaimsJws(token)
         } catch (e: ExpiredJwtException) {
-            throw Error("Expired Jwt Error")
+            throw ExpireTokenException
         } catch (e: Exception) {
-            throw Error("Invalid Jwt Error")
+            throw InvalidTokenException
         }
     }
 
