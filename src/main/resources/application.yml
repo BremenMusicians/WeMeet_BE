@@ -17,3 +17,12 @@ jwt:
   refreshExp: ${JWT_REFRESH_EXP:3600000}
   header: ${JWT_HEADER:Authorization}
   prefix: ${JWT_PREFIX:Bearer}
+
+mail:
+  host: smtp.gmail.com
+  port: ${MAIL_PORT:587}
+  username: ${MAIL_USERNAME}
+  password: ${MAIL_PASSWORD}
+  auth: true
+  enable: true
+  required: true
