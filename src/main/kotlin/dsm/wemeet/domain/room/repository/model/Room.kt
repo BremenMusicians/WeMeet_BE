@@ -34,6 +34,6 @@ class Room(
     @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_public")
     val isPublic: Boolean,
 
-    @Column(columnDefinition = "SMALLINT", nullable = false)
+    @Column(columnDefinition = "SMALLINT", nullable = true)
     val password: Int
 )
