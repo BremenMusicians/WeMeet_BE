@@ -2,7 +2,7 @@ package dsm.wemeet.global.mail.service
 
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.mail.MailProperties
-import dsm.wemeet.global.mail.exception.InternationalMailServerException
+import dsm.wemeet.global.mail.exception.InternalMailServerException
 import dsm.wemeet.global.mail.presentation.dto.request.SendMailRequest
 import dsm.wemeet.global.redis.RedisUtil
 import jakarta.mail.internet.InternetAddress
@@ -43,7 +43,7 @@ class SendMailService(
             mailSender.send(message)
         } catch (e: Exception) {
             redisUtil.deleteData(cleanEmail)
-            throw InternationalMailServerException
+            throw InternalMailServerException
         }
     }
 
