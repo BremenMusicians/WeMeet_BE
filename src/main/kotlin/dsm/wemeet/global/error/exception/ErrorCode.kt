@@ -8,6 +8,7 @@ enum class ErrorCode(
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
     EXPIRE_TOKEN_EXCEPTION(401, "Expire Token Exception"),
+    MAIL_CODE_MISS_MATCH(401, "Mail Code Miss Match"),
 
     USER_NOT_FOUND(404, "User Not Found"),
 
