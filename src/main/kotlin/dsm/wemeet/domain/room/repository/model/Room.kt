@@ -31,6 +31,6 @@ class Room(
     @Column(columnDefinition = "VARCHAR(100)", nullable = false)
     val info: String,
 
-    @Column(columnDefinition = "SMALLINT", nullable = true)
-    val password: Int?
+    @Column(columnDefinition = "CHAR(4)", nullable = true)
+    val password: String?
 )

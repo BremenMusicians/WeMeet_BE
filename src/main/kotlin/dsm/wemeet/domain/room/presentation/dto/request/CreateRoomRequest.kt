@@ -18,7 +18,6 @@ data class CreateRoomRequest(
     val info: String,
 
     @field:Nullable
-    @field:Min(1000)
-    @field:Max(9999)
-    val password: Int?
+    @field:Size(min = 4, max = 4)
+    val password: String?
 )
