@@ -1,4 +1,4 @@
-package dsm.wemeet.global.mail.service
+package dsm.wemeet.global.mail.usecase
 
 import dsm.wemeet.global.mail.exception.ExpiredMailCodeException
 import dsm.wemeet.global.mail.exception.MailCodeMissMatchException
@@ -7,7 +7,7 @@ import dsm.wemeet.global.redis.RedisUtil
 import org.springframework.stereotype.Service
 
 @Service
-class VerifyMailService(
+class VerifyMailServiceUseCase(
     private val redisUtil: RedisUtil
 ) {
 

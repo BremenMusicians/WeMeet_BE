@@ -1,4 +1,4 @@
-package dsm.wemeet.global.mail.service
+package dsm.wemeet.global.mail.usecase
 
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.mail.MailProperties
@@ -15,7 +15,7 @@ import org.springframework.util.FileCopyUtils
 import kotlin.random.Random
 
 @Service
-class SendMailService(
+class SendMailUseCase(
     private val mailSender: JavaMailSender,
     private val mailProperties: MailProperties,
     private val queryUserService: QueryUserService,
