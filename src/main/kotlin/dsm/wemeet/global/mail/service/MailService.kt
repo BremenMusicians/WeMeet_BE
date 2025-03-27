@@ -2,7 +2,10 @@ package dsm.wemeet.global.mail.service
 
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.mail.MailProperties
+import dsm.wemeet.global.mail.exception.InternationalMailServerException
 import dsm.wemeet.global.mail.exception.MailCodeMissMatchException
+import dsm.wemeet.global.mail.presentation.dto.request.CheckMailRequest
+import dsm.wemeet.global.mail.presentation.dto.request.SendMailRequest
 import dsm.wemeet.global.redis.RedisUtil
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
@@ -21,9 +24,10 @@ class MailService(
 ) {
 
     @Transactional
-    fun sendCode(to: String) {
-        queryUserService.existsByEmail(to)
-        val cleanEmail = to.replace("\"", "")
+    fun sendCode(request: SendMailRequest) {
+        val cleanEmail = request.mail.replace("\"", "")
+
+        queryUserService.existsByEmail(cleanEmail)
 
         val authCode = generateAuthCode()
 
@@ -32,7 +36,7 @@ class MailService(
         val message: MimeMessage = mailSender.createMimeMessage()
         val helper = MimeMessageHelper(message, true, "UTF-8")
 
-        helper.setTo(to)
+        helper.setTo(cleanEmail)
         helper.setSubject("[wemeet] 이메일 인증번호 확인")
         helper.setFrom(InternetAddress(mailProperties.username, "wemeet"))
 
@@ -53,14 +57,19 @@ class MailService(
         """.trimIndent()
 
         helper.setText(content, true)
-        mailSender.send(message)
+        try {
+            mailSender.send(message)
+        } catch (e: Exception) {
+            redisUtil.deleteData(cleanEmail)
+            throw InternationalMailServerException
+        }
     }
 
-    fun verifyMailCode(mail: String, code: String): Boolean {
-        val redisCode = redisUtil.getData(mail)
+    fun verifyMailCode(request: CheckMailRequest): Boolean {
+        val redisCode = redisUtil.getData(request.mail)
 
-        return if (redisCode != null && redisCode == code) {
-            redisUtil.deleteData(mail)
+        return if (redisCode != null && redisCode == request.code) {
+            redisUtil.deleteData(request.code)
             true
         } else {
             throw MailCodeMissMatchException
