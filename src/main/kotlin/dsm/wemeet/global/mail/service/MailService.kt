@@ -2,6 +2,7 @@ package dsm.wemeet.global.mail.service
 
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.mail.MailProperties
+import dsm.wemeet.global.mail.exception.ExpiredMailCodeException
 import dsm.wemeet.global.mail.exception.InternationalMailServerException
 import dsm.wemeet.global.mail.exception.MailCodeMissMatchException
 import dsm.wemeet.global.mail.presentation.dto.request.CheckMailRequest
@@ -66,10 +67,10 @@ class MailService(
     }
 
     fun verifyMailCode(request: CheckMailRequest): Boolean {
-        val redisCode = redisUtil.getData(request.mail)
+        val redisCode = redisUtil.getData(request.mail) ?: throw ExpiredMailCodeException
 
-        return if (redisCode != null && redisCode == request.code) {
-            redisUtil.deleteData(request.code)
+        return if (redisCode == request.code) {
+            redisUtil.deleteData(request.mail)
             true
         } else {
             throw MailCodeMissMatchException
