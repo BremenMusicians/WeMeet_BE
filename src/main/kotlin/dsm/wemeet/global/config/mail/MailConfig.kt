@@ -1,4 +1,4 @@
-package dsm.wemeet.global.mail.config
+package dsm.wemeet.global.config.mail
 
 import dsm.wemeet.global.mail.MailProperties
 import org.springframework.context.annotation.Bean
