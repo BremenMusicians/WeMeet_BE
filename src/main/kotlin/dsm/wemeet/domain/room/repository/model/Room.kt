@@ -32,5 +32,5 @@ class Room(
     val info: String,
 
     @Column(columnDefinition = "SMALLINT", nullable = true)
-    val password: Int
+    val password: Int?
 )
