@@ -1,6 +1,9 @@
 package dsm.wemeet.global.mail.service
 
+import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.mail.MailProperties
+import dsm.wemeet.global.mail.exception.MailCodeMissMatchException
+import dsm.wemeet.global.redis.RedisUtil
 import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
 import org.springframework.mail.javamail.JavaMailSender
@@ -12,12 +15,19 @@ import kotlin.random.Random
 @Service
 class MailService(
     private val mailSender: JavaMailSender,
-    private val mailProperties: MailProperties
+    private val mailProperties: MailProperties,
+    private val queryUserService: QueryUserService,
+    private val redisUtil: RedisUtil
 ) {
 
     @Transactional
-    fun sendCode(to: String): String {
+    fun sendCode(to: String) {
+        queryUserService.existsByEmail(to)
+        val cleanEmail = to.replace("\"", "")
+
         val authCode = generateAuthCode()
+
+        redisUtil.setDataExpire(cleanEmail, authCode, 600)
 
         val message: MimeMessage = mailSender.createMimeMessage()
         val helper = MimeMessageHelper(message, true, "UTF-8")
@@ -26,7 +36,7 @@ class MailService(
         helper.setSubject("[wemeet] 이메일 인증번호 확인")
         helper.setFrom(InternetAddress(mailProperties.username, "wemeet"))
 
-        val msgg = """
+        val content = """
             <div style='padding: 40px; text-align: center;'>
                 <h1 style='font-weight: bold;'>이메일 인증번호 확인</h1>
                 <p style='color: gray;'>wemeet 로그인 및 회원가입을 위한 인증번호입니다.</p>
@@ -42,10 +52,19 @@ class MailService(
             </div>
         """.trimIndent()
 
-        helper.setText(msgg, true)
+        helper.setText(content, true)
         mailSender.send(message)
+    }
 
-        return authCode
+    fun verifyMailCode(mail: String, code: String): Boolean {
+        val redisCode = redisUtil.getData(mail)
+
+        return if (redisCode != null && redisCode == code) {
+            redisUtil.deleteData(mail)
+            true
+        } else {
+            throw MailCodeMissMatchException
+        }
     }
 }
 
