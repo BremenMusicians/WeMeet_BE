@@ -11,6 +11,11 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  data:
+    redis:
+      port: ${REDIS_PORT:6379}
+      host: ${REDIS_HOST}
+
 jwt:
   secret: ${SECRET_KEY:scretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfnscretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfnscretgdkdfkldjkaljldnlkandlkfnalsdkjflkasnflksndflkjsadlkfn}
   accessExp: ${JWT_ACCESS_EXP:3600}
