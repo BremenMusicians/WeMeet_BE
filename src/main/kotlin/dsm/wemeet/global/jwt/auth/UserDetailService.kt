@@ -12,7 +12,6 @@ class UserDetailService(
 
     override fun loadUserByUsername(mail: String): UserDetails {
         val user = queryUserService.queryUserByEmail(mail)
-        println(user)
 
         return UserDetails(user.email)
     }
