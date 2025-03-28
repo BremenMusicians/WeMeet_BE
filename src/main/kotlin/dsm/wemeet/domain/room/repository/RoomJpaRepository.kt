@@ -2,6 +2,7 @@ package dsm.wemeet.domain.room.repository
 
 import dsm.wemeet.domain.room.repository.model.Room
 import dsm.wemeet.domain.room.repository.vo.CurrentRoomVo
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -19,7 +20,7 @@ interface RoomJpaRepository : JpaRepository<Room, UUID> {
         ORDER BY r.createdAt desc
     """
     )
-    fun findAllRoomDetailsByName(@Param("name") name: String?): List<CurrentRoomVo>
+    fun findAllRoomDetailsByNamePageable(@Param("name") name: String?, pageable: Pageable): List<CurrentRoomVo>
 
     fun countByNameContaining(name: String?): Long
 }
