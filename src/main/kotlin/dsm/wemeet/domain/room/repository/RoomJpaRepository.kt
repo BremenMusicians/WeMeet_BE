@@ -20,4 +20,6 @@ interface RoomJpaRepository : JpaRepository<Room, UUID> {
     """
     )
     fun findAllRoomDetailsByName(@Param("name") name: String?): List<CurrentRoomVo>
+
+    fun countByNameContaining(name: String?): Long
 }

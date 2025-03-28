@@ -10,13 +10,13 @@ class QueryRoomServiceImpl(
     private val roomJpaRepository: RoomJpaRepository
 ) : QueryRoomService {
 
-    override fun queryRoomListByNameAndOffsetByPage(page: Int, name: String?): List<CurrentRoomVo> =
+    override fun queryRoomListByNameContainsAndOffsetByPage(page: Int, name: String?): List<CurrentRoomVo> =
         roomJpaRepository.findAllRoomDetailsByName(name)
             .stream()
             .skip(page * 6L)
             .limit(6)
             .toList()
 
-    override fun queryRoomCount(): Int =
-        roomJpaRepository.count().toInt()
+    override fun countByNameContains(name: String?): Int =
+        roomJpaRepository.countByNameContaining(name).toInt()
 }
