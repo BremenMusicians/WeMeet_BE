@@ -1,7 +1,6 @@
 package dsm.wemeet.domain.user.usecase
 
 import dsm.wemeet.domain.user.presentation.dto.request.UpdateUserInfoRequest
-import dsm.wemeet.domain.user.repository.model.User
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.domain.user.service.SaveUserService
 import org.springframework.stereotype.Service
@@ -17,15 +16,10 @@ class UpdateUserInfoUseCase(
 
         if (user.accountId != request.accountId) queryUserService.existsByAccountId(request.accountId)
 
-        val newUser = User(
-            email = user.email,
-            password = user.password,
-            accountId = request.accountId,
-            profile = user.profile,
-            aboutMe = request.aboutMe,
-            position = request.position.joinToString(",")
-        )
+        user.accountId = request.accountId
+        user.aboutMe = request.aboutMe
+        user.position = request.position.joinToString(",")
 
-        saveUserService.save(newUser)
+        saveUserService.save(user)
     }
 }
