@@ -6,6 +6,7 @@ import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
 import dsm.wemeet.domain.room.usecase.CreateRoomUseCase
 import dsm.wemeet.domain.room.usecase.QueryRoomListUseCase
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,7 +35,9 @@ class RoomController(
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     fun queryRoomList(
-        @RequestParam(value = "page", defaultValue = "0") page: Int,
+        @RequestParam(value = "page")
+        @Min(0)
+        page: Int,
         @RequestParam(value = "name", required = false) name: String?
     ): QueryRoomListResponse {
         return queryRoomListUseCase.execute(page, name)
