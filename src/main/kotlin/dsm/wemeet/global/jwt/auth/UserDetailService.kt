@@ -10,9 +10,10 @@ class UserDetailService(
     private val queryUserService: QueryUserService
 ) : UserDetailsService {
 
-    override fun loadUserByUsername(accountId: String): UserDetails {
-        val user = queryUserService.queryUserByAccountId(accountId)
+    override fun loadUserByUsername(mail: String): UserDetails {
+        val user = queryUserService.queryUserByEmail(mail)
+        println(user)
 
-        return UserDetails(user.accountId)
+        return UserDetails(user.email)
     }
 }

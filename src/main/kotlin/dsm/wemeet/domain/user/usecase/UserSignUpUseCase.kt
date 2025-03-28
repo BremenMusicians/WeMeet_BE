@@ -30,7 +30,7 @@ class UserSignUpUseCase(
                 position = request.position.joinToString(",")
             )
         )
-        return jwtProvider.generateToken(user.accountId)
+        return jwtProvider.generateToken(user.email)
     }
 
     private fun existUser(email: String, accountId: String) {
