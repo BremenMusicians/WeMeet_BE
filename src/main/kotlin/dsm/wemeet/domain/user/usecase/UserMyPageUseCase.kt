@@ -15,7 +15,7 @@ class UserMyPageUseCase(
 
     fun execute(): MyPageResponse {
         val user = queryUserService.getCurrentUser()
-        val friends = queryFriendService.queryFriendsByUserAndIsAccepted(user.email)
+        val friends = queryFriendService.queryAcceptedFriendsByUser(user.email)
 
         val friendResponses = friends.map { it ->
             val friend = if (it.proposer == user) it.receiver else it.proposer
