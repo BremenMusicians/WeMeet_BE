@@ -15,6 +15,7 @@ class FilterConfig(
     private val jwtProvider: JwtProvider,
     private val objectMapper: ObjectMapper
 ) : SecurityConfigurer<DefaultSecurityFilterChain, HttpSecurity> {
+
     override fun init(builder: HttpSecurity?) {}
 
     override fun configure(builder: HttpSecurity) {
