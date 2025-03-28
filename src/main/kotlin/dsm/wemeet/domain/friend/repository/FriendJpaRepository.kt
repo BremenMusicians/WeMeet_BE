@@ -17,4 +17,14 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
         """
     )
     fun findByAnyEmail(@Param("user1") user1: String, @Param("user2") user2: String): Friend?
+
+    @Query(
+        """
+        SELECT f 
+        FROM Friend f 
+        WHERE (f.proposer.email = :user OR f.receiver.email = :user)
+        AND f.isAccepted = true
+    """
+    )
+    fun findAcceptedFriendsByUser(@Param("user") user: String): List<Friend>
 }
