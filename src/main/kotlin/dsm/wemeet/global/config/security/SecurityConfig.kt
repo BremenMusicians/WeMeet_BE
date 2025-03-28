@@ -1,6 +1,5 @@
 package dsm.wemeet.global.config.security
 
-import dsm.wemeet.global.jwt.JwtProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.Customizer
@@ -14,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain
 class SecurityConfig {
 
     @Bean
-    protected fun filterChain(http: HttpSecurity, jwtProvider: JwtProvider): SecurityFilterChain {
+    protected fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf { it.disable() }
             .formLogin { it.disable() }
