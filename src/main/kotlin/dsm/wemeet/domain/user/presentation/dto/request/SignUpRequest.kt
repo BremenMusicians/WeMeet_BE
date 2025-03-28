@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size
 
 data class SignUpRequest(
     @field:Email
-    val email: String,
+    val mail: String,
 
     @field:Size(min = 4, max = 20)
     @field:Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)[^\\s]*$", message = "비밀번호는 4~20자, 영문과 숫자를 포함해야 합니다.")
