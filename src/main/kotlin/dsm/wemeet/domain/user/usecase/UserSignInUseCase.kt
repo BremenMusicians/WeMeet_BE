@@ -1,7 +1,6 @@
 package dsm.wemeet.domain.user.usecase
 
 import dsm.wemeet.domain.user.exception.PasswordMissMatchException
-import dsm.wemeet.domain.user.exception.UserNotFoundException
 import dsm.wemeet.domain.user.presentation.dto.request.SignInRequest
 import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.jwt.JwtProvider
@@ -19,8 +18,7 @@ class UserSignInUseCase(
 ) {
 
     fun execute(request: SignInRequest): TokenResponse {
-        val user = queryUserService.queryUserByEmail(request.email)
-            ?: throw UserNotFoundException
+        val user = queryUserService.queryUserByEmail(request.mail)
 
         if (!passwordEncoder.matches(request.password, user.password)) {
             throw PasswordMissMatchException

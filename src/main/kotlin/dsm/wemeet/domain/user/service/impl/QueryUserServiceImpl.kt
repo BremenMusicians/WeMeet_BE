@@ -15,7 +15,7 @@ class QueryUserServiceImpl(
 ) : QueryUserService {
 
     override fun getCurrentUser(): User =
-        queryUserByEmail(securityService.getCurrentUserEmail())
+        queryUserByAccountId(securityService.getCurrentUserAccountId())
 
     override fun queryUserByEmail(email: String) =
         userJpaRepository.findByEmail(email) ?: throw UserNotFoundException

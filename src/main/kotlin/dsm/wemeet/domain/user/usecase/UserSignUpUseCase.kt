@@ -20,11 +20,11 @@ class UserSignUpUseCase(
 ) {
 
     fun execute(request: SignUpRequest): TokenResponse {
-        existUser(request.email, request.accountId)
+        existUser(request.mail, request.accountId)
 
         val user = saveUserService.save(
             User(
-                email = request.email,
+                email = request.mail,
                 password = passwordEncoder.encode(request.password),
                 accountId = request.accountId,
                 position = request.position.joinToString(",")
