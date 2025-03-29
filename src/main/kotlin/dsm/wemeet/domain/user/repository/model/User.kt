@@ -15,14 +15,14 @@ class User(
     val password: String,
 
     @Column(columnDefinition = "VARCHAR(20)", nullable = false, name = "account_id", unique = true)
-    val accountId: String,
+    var accountId: String,
 
     @Column(columnDefinition = "CHAR(255)", nullable = true)
-    val profile: String? = null,
+    var profile: String? = null,
 
     @Column(columnDefinition = "VARCHAR(255)", nullable = true, name = "about_me")
-    val aboutMe: String? = null,
+    var aboutMe: String? = null,
 
     @Column(columnDefinition = "VARCHAR(40)", nullable = false)
-    val position: String
+    var position: String
 )
