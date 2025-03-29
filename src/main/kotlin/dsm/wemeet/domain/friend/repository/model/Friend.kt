@@ -27,5 +27,5 @@ class Friend(
     val receiver: User,
 
     @Column(columnDefinition = "BOOLEAN", nullable = false, name = "is_accepted")
-    val isAccepted: Boolean = false
+    var isAccepted: Boolean = false
 )
