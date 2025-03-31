@@ -11,7 +11,10 @@ enum class ErrorCode(
     MAIL_CODE_MISS_MATCH(401, "Mail Code Miss Match"),
     EXPIRED_MAIL_CODE_EXCEPTION(401, "Expired Mail Code Exception"),
 
+    ROOM_PASSWORD_MISS_MATCH(403, "Room Password Miss Match"),
+
     USER_NOT_FOUND(404, "User Not Found"),
+    ROOM_NOT_FOUND(404, "Room Not Found"),
 
     USER_ALREADY_EXISTS(409, "User already exists"),
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
