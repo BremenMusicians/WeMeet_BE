@@ -40,6 +40,6 @@ class JoinRoomUseCase(
             )
         )
 
-        // TODO : WebRTC 시그널링 API
+        // TODO : WebRTC 시그널링 API (Issue #23)
     }
 }
