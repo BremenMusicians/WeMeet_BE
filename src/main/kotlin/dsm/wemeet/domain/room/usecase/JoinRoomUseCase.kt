@@ -22,9 +22,12 @@ class JoinRoomUseCase(
         val currentRoom = queryRoomService.queryRoomById(roomId)
         val currentUser = queryUserService.getCurrentUser()
 
-        if (currentRoom.password != request.password) {
-            throw RoomPasswordMissMatchException
+        currentRoom.password?.let {
+            if (it != request.password) {
+                throw RoomPasswordMissMatchException
+            }
         }
+
 
         checkRoomService.checkIsJoinedRoom(currentUser, currentRoom)
 

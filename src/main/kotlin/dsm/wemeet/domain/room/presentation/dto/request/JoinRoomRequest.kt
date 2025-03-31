@@ -5,5 +5,5 @@ import jakarta.validation.constraints.Size
 data class JoinRoomRequest(
 
     @Size(min = 4, max = 4)
-    val password: String
+    val password: String?
 )
