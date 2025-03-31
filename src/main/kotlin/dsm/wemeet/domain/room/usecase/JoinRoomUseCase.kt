@@ -30,7 +30,6 @@ class JoinRoomUseCase(
             }
         }
 
-
         checkRoomService.validateUserNotAlreadyInRoom(currentUser, currentRoom)
 
         val member = commandRoomService.saveMember(
