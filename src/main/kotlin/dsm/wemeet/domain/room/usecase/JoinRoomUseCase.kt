@@ -8,9 +8,11 @@ import dsm.wemeet.domain.room.service.CommandRoomService
 import dsm.wemeet.domain.room.service.QueryRoomService
 import dsm.wemeet.domain.user.service.QueryUserService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
+@Transactional
 class JoinRoomUseCase(
     private val queryRoomService: QueryRoomService,
     private val queryUserService: QueryUserService,
