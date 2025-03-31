@@ -24,6 +24,6 @@ class UserSignInUseCase(
             throw PasswordMissMatchException
         }
 
-        return jwtProvider.generateToken(user.accountId)
+        return jwtProvider.generateToken(user.email)
     }
 }
