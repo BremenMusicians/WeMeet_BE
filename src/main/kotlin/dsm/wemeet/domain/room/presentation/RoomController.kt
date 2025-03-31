@@ -45,7 +45,7 @@ class RoomController(
         @RequestBody @Valid
         request: JoinRoomRequest
     ) {
-        return joinRoomUseCase.execute(roomId, request)
+        joinRoomUseCase.execute(roomId, request)
     }
 
     @ResponseStatus(HttpStatus.OK)
