@@ -12,7 +12,7 @@ class CheckRoomServiceImpl(
     private val memberJpaRepository: MemberJpaRepository
 ) : CheckRoomService {
 
-    override fun checkIsJoinedRoom(user: User, room: Room) {
+    override fun validateUserNotAlreadyInRoom(user: User, room: Room) {
         if (memberJpaRepository.existsMemberByUserAndRoom(user, room)) {
             throw AlreadyJoinedRoomException
         }

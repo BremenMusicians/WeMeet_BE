@@ -5,5 +5,5 @@ import dsm.wemeet.domain.user.repository.model.User
 
 interface CheckRoomService {
 
-    fun checkIsJoinedRoom(user: User, room: Room)
+    fun validateUserNotAlreadyInRoom(user: User, room: Room)
 }
