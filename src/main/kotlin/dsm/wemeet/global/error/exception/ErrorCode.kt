@@ -11,10 +11,14 @@ enum class ErrorCode(
     MAIL_CODE_MISS_MATCH(401, "Mail Code Miss Match"),
     EXPIRED_MAIL_CODE_EXCEPTION(401, "Expired Mail Code Exception"),
 
-    USER_NOT_FOUND(404, "User Not Found"),
+    ROOM_PASSWORD_MISS_MATCH(403, "Room Password Miss Match"),
 
-    USER_ALREADY_EXISTS(409, "User already exists"),
+    USER_NOT_FOUND(404, "User Not Found"),
+    ROOM_NOT_FOUND(404, "Room Not Found"),
+
+    USER_ALREADY_EXISTS(409, "User Already Exists"),
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
+    ALREADY_JOINED_ROOM(409, "Already Joined Room"),
 
     INTERNAL_MAIL_SERVER_ERROR(500, "Internal Mail Server Error")
 }
