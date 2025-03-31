@@ -44,7 +44,7 @@ class UserController(
     @GetMapping("/myPage")
     fun myPage() = userMyPageUseCase.execute()
 
-    @GetMapping("/{account-id}")
+    @GetMapping("/exist/{account-id}")
     fun existAccountId(@PathVariable(name = "account-id") accountId: String) = existAccountIdUseCase.execute(accountId)
 
     @PatchMapping("/update")
