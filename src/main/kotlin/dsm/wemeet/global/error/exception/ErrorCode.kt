@@ -18,6 +18,7 @@ enum class ErrorCode(
 
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
+    ALREADY_JOINED_ROOM(409, "Already Joined Room"),
 
     INTERNAL_MAIL_SERVER_ERROR(500, "Internal Mail Server Error")
 }
