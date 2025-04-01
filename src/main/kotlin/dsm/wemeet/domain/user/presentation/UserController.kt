@@ -44,7 +44,7 @@ class UserController(
     ) =
         userSignInUseCase.execute(request)
 
-    @PatchMapping("/refresh")
+    @PostMapping("/refresh")
     fun refresh(@RequestHeader("X-Refresh-Token") token: String) = userTokenRefreshUseCase.execute(token)
 
     @GetMapping("/myPage")
