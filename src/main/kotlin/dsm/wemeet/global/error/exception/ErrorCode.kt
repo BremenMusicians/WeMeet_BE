@@ -5,6 +5,9 @@ enum class ErrorCode(
     val message: String
 ) {
 
+    BAD_FILE_EXT(400, "Bad File Format"),
+    FILE_NOT_EXIST(400, "File Not Exist"),
+
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
     EXPIRE_TOKEN_EXCEPTION(401, "Expire Token Exception"),
