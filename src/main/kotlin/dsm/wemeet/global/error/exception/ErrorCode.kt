@@ -15,6 +15,7 @@ enum class ErrorCode(
 
     USER_NOT_FOUND(404, "User Not Found"),
     ROOM_NOT_FOUND(404, "Room Not Found"),
+    MEMBER_NOT_FOUND(404, "Member Not Found"),
 
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
