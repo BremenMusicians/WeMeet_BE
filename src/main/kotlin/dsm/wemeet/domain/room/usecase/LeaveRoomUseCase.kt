@@ -19,11 +19,20 @@ class LeaveRoomUseCase(
         val currentUser = queryUserService.getCurrentUser()
         val currentRoom = queryRoomService.queryRoomById(roomId)
 
-        val member = queryRoomService.queryMemberByUserEmailAndRoomId(
-            userEmail = currentUser.email,
-            roomId = currentRoom.id!!
-        )
+        // TODO : 이 더러운 코드는 추후 리팩토링 (#45)
+        if (currentRoom.owner.email == currentUser.email) {
+            val randomMember = queryRoomService.queryAllMemberByRoomId(currentRoom.id!!).random()
 
-        commandRoomService.deleteMember(member)
+            currentRoom.owner = randomMember.user
+
+            commandRoomService.deleteMember(randomMember)
+        } else {
+            val member = queryRoomService.queryMemberByUserEmailAndRoomId(
+                userEmail = currentUser.email,
+                roomId = currentRoom.id!!
+            )
+
+            commandRoomService.deleteMember(member)
+        }
     }
 }
