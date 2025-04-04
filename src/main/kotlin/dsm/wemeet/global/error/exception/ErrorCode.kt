@@ -24,5 +24,6 @@ enum class ErrorCode(
     ALREADY_JOINED_ROOM(409, "Already Joined Room"),
 
     INTERNAL_MAIL_SERVER_ERROR(500, "Internal Mail Server Error"),
-    FILE_UPLOAD_ERROR(500, "File Upload Error")
+    FILE_UPLOAD_ERROR(500, "File Upload Error"),
+    FILE_DELETE_ERROR(500, "File Delete Error")
 }

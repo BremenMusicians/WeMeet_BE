@@ -2,6 +2,7 @@ package dsm.wemeet.global.s3
 
 import dsm.wemeet.global.s3.exception.BadFileExtException
 import dsm.wemeet.global.s3.exception.EmptyFileException
+import dsm.wemeet.global.s3.exception.FileDeleteException
 import dsm.wemeet.global.s3.exception.FileUploadException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
@@ -69,12 +70,16 @@ class S3Util(
     }
 
     fun delete(fileName: String) {
-        s3Client.deleteObject(
-            DeleteObjectRequest.builder()
-                .bucket(bucketName)
-                .key(fileName)
-                .build()
-        )
+        try {
+            s3Client.deleteObject(
+                DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fileName)
+                    .build()
+            )
+        } catch (e: Exception) {
+            throw FileDeleteException
+        }
     }
 
     fun generateUrl(fileName: String): String {
