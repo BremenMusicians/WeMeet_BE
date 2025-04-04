@@ -10,4 +10,6 @@ interface CommandRoomService {
     fun saveMember(member: Member): Member
 
     fun deleteMember(member: Member)
+
+    fun deleteRoom(room: Room)
 }
