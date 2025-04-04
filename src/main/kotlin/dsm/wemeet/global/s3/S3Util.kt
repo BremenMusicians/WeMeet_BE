@@ -1,7 +1,9 @@
 package dsm.wemeet.global.s3
 
+import com.amazonaws.HttpMethod
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import dsm.wemeet.global.s3.exception.BadFileExtException
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
@@ -36,7 +39,7 @@ class S3Util(
 
         file.inputStream.use {
             amazonS3.putObject(
-                PutObjectRequest(bucketName, "$fileName", it, metadata)
+                PutObjectRequest(bucketName, fileName, it, metadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead)
             )
         }
@@ -58,5 +61,18 @@ class S3Util(
 
     fun delete(fileName: String) {
         amazonS3.deleteObject(bucketName, fileName)
+    }
+
+    fun generateUrl(fileName: String): String {
+        val exp = Date().apply {
+            time += s3Exp.toLong()
+        }
+
+        return amazonS3.generatePresignedUrl(
+            GeneratePresignedUrlRequest(
+                bucketName,
+                fileName
+            ).withMethod(HttpMethod.GET).withExpiration(exp)
+        ).toString()
     }
 }
