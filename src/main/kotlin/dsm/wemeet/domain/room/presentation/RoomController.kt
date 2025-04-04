@@ -6,10 +6,12 @@ import dsm.wemeet.domain.room.presentation.dto.response.CreateRoomResponse
 import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
 import dsm.wemeet.domain.room.usecase.CreateRoomUseCase
 import dsm.wemeet.domain.room.usecase.JoinRoomUseCase
+import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.domain.room.usecase.QueryRoomListUseCase
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -25,7 +27,8 @@ import java.util.UUID
 class RoomController(
     private val createRoomUseCase: CreateRoomUseCase,
     private val joinRoomUseCase: JoinRoomUseCase,
-    private val queryRoomListUseCase: QueryRoomListUseCase
+    private val queryRoomListUseCase: QueryRoomListUseCase,
+    private val leaveRoomUseCase: LeaveRoomUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -57,5 +60,11 @@ class RoomController(
         @RequestParam(value = "name", required = false) name: String?
     ): QueryRoomListResponse {
         return queryRoomListUseCase.execute(page, name)
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("{room-id}")
+    fun leaveRoom(@PathVariable("room-id") roomId: UUID) {
+        leaveRoomUseCase.execute(roomId)
     }
 }
