@@ -2,6 +2,7 @@ package dsm.wemeet.global.s3
 
 import dsm.wemeet.global.s3.exception.BadFileExtException
 import dsm.wemeet.global.s3.exception.EmptyFileException
+import dsm.wemeet.global.s3.exception.FileUploadException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -28,6 +29,8 @@ class S3Util(
     @Value("\${cloud.aws.s3.exp-time}")
     lateinit var s3Exp: String
 
+    private val s3Presigner = S3Presigner.create()
+
     fun upload(file: MultipartFile): String {
         val name = UUID.randomUUID()
         val ext = verificationFile(file)
@@ -37,14 +40,18 @@ class S3Util(
             .bucket(bucketName)
             .key(fileName)
             .contentType(MediaType.ALL_VALUE)
-            .acl(ObjectCannedACL.PUBLIC_READ)
+            .acl(ObjectCannedACL.PRIVATE)
             .contentLength(file.size)
             .build()
 
-        s3Client.putObject(
-            putObjectRequest,
-            RequestBody.fromInputStream(file.inputStream, file.size)
-        )
+        try {
+            s3Client.putObject(
+                putObjectRequest,
+                RequestBody.fromInputStream(file.inputStream, file.size)
+            )
+        } catch (e: Exception) {
+            throw FileUploadException
+        }
 
         return fileName
     }
@@ -78,7 +85,7 @@ class S3Util(
             .key(fileName)
             .build()
 
-        val freshUrl = S3Presigner.create().presignGetObject { builder ->
+        val freshUrl = s3Presigner.presignGetObject { builder ->
             builder.getObjectRequest(imgRequest)
                 .signatureDuration(exp)
         }
