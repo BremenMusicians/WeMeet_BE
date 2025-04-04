@@ -21,7 +21,7 @@ class Room(
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "owner", referencedColumnName = "email", nullable = false)
-    val owner: User,
+    var owner: User,
 
     @Column(columnDefinition = "VARCHAR(20)", nullable = false)
     val name: String,
