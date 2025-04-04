@@ -29,7 +29,7 @@ class LeaveRoomUseCase(
         if (currentRoom.owner.email == currentUser.email) {
             val members = queryRoomService.queryAllMemberByRoomIdOrderByJoinedAt(currentRoom.id!!)
 
-            members.lastOrNull()?.let {
+            members.firstOrNull()?.let {
                 currentRoom.owner = it.user
             } ?: {
                 commandRoomService.deleteRoom(currentRoom)
