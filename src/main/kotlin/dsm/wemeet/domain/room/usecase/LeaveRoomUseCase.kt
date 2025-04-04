@@ -30,7 +30,7 @@ class LeaveRoomUseCase(
             val members = queryRoomService.queryAllMemberByRoomIdOrderByJoinedAt(currentRoom.id!!)
 
             members.lastOrNull()?.let {
-                currentRoom.owner = it
+                currentRoom.owner = it.user
             } ?: {
                 commandRoomService.deleteRoom(currentRoom)
             }
