@@ -28,5 +28,5 @@ class Member(
     val user: User,
 
     @Column(columnDefinition = "DATETIME", nullable = false, name = "joined_at")
-    val joinedAt: LocalDateTime = LocalDateTime.now(),
+    val joinedAt: LocalDateTime = LocalDateTime.now()
 )
