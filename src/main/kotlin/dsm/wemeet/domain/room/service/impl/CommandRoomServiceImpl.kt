@@ -22,4 +22,8 @@ class CommandRoomServiceImpl(
     override fun deleteMember(member: Member) {
         memberJpaRepository.delete(member)
     }
+
+    override fun deleteRoom(room: Room) {
+        roomJpaRepository.delete(room)
+    }
 }

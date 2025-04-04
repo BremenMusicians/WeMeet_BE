@@ -12,7 +12,7 @@ interface RoomJpaRepository : JpaRepository<Room, UUID> {
 
     @Query(
         """
-        SELECT new dsm.wemeet.domain.room.repository.vo.CurrentRoomVo(r.id, r.name, r.info, (r.password IS NOT NULL), (COUNT(m.id) + 1), r.maxMember)
+        SELECT new dsm.wemeet.domain.room.repository.vo.CurrentRoomVo(r.id, r.name, r.info, (r.password IS NOT NULL), COUNT(m.id), r.maxMember)
         FROM Room as r
         LEFT JOIN Member as m ON r.id = m.room.id
         WHERE (:name IS NULL OR r.name LIKE CONCAT('%', :name, '%'))

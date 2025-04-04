@@ -32,8 +32,8 @@ class QueryRoomServiceImpl(
     override fun queryMemberByUserEmailAndRoomId(userEmail: String, roomId: UUID): Member =
         memberJpaRepository.findByUserEmailAndRoomId(userEmail, roomId) ?: throw MemberNotFoundException
 
-    override fun queryAllMemberByRoomId(roomId: UUID): List<Member> =
-        memberJpaRepository.findAllByRoomId(roomId)
+    override fun queryAllMemberByRoomIdOrderByJoinedAt(roomId: UUID): List<Member> =
+        memberJpaRepository.findAllByRoomIdOrderByJoinedAt(roomId)
 
     override fun countByNameContains(name: String?): Int =
         roomJpaRepository.countByNameContaining(name).toInt()

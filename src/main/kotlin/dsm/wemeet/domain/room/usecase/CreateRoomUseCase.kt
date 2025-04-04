@@ -2,6 +2,7 @@ package dsm.wemeet.domain.room.usecase
 
 import dsm.wemeet.domain.room.presentation.dto.request.CreateRoomRequest
 import dsm.wemeet.domain.room.presentation.dto.response.CreateRoomResponse
+import dsm.wemeet.domain.room.repository.model.Member
 import dsm.wemeet.domain.room.repository.model.Room
 import dsm.wemeet.domain.room.service.CommandRoomService
 import dsm.wemeet.domain.user.service.QueryUserService
@@ -25,6 +26,13 @@ class CreateRoomUseCase(
                 maxMember = request.maxMember,
                 info = request.info,
                 password = request.password
+            )
+        )
+
+        val member = commandRoomService.saveMember(
+            Member(
+                room = room,
+                user = currentUser
             )
         )
 
