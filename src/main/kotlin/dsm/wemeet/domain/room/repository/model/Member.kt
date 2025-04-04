@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -24,5 +25,8 @@ class Member(
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "member_email", referencedColumnName = "email", nullable = false)
-    val user: User
+    val user: User,
+
+    @Column(columnDefinition = "DATETIME", nullable = false, name = "joined_at")
+    val joinedAt: LocalDateTime = LocalDateTime.now(),
 )
