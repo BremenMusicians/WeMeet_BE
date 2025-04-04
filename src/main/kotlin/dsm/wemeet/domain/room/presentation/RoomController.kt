@@ -63,7 +63,7 @@ class RoomController(
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("{room-id}")
+    @DeleteMapping("/{room-id}")
     fun leaveRoom(@PathVariable("room-id") roomId: UUID) {
         leaveRoomUseCase.execute(roomId)
     }
