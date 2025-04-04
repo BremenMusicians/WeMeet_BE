@@ -13,7 +13,7 @@ interface QueryRoomService {
 
     fun queryMemberByUserEmailAndRoomId(userEmail: String, roomId: UUID): Member
 
-    fun queryAllMemberByRoomId(roomId: UUID): List<Member>
+    fun queryAllMemberByRoomIdOrderByJoinedAt(roomId: UUID): List<Member>
 
     fun countByNameContains(name: String?): Int
 }
