@@ -5,7 +5,7 @@ enum class ErrorCode(
     val message: String
 ) {
 
-    BAD_FILE_EXT(400, "Bad File Format"),
+    BAD_FILE_EXTENSION(400, "Bad File Extension"),
     FILE_NOT_EXIST(400, "File Not Exist"),
 
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
@@ -23,5 +23,6 @@ enum class ErrorCode(
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
     ALREADY_JOINED_ROOM(409, "Already Joined Room"),
 
-    INTERNAL_MAIL_SERVER_ERROR(500, "Internal Mail Server Error")
+    INTERNAL_MAIL_SERVER_ERROR(500, "Internal Mail Server Error"),
+    FILE_UPLOAD_ERROR(500, "File Upload Error")
 }
