@@ -18,4 +18,8 @@ class CommandRoomServiceImpl(
 
     override fun saveMember(member: Member) =
         memberJpaRepository.save(member)
+
+    override fun deleteMember(member: Member) {
+        memberJpaRepository.delete(member)
+    }
 }

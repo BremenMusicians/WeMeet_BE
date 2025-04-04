@@ -8,5 +8,9 @@ import java.util.*
 
 interface MemberJpaRepository : JpaRepository<Member, UUID> {
 
+    fun findByUserEmailAndRoomId(email: String, id: UUID): Member?
+
+    fun findAllByRoomId(roomId: UUID): List<Member>
+
     fun existsMemberByUserAndRoom(user: User, room: Room): Boolean
 }

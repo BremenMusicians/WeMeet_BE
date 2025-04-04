@@ -8,4 +8,6 @@ interface CommandRoomService {
     fun saveRoom(room: Room): Room
 
     fun saveMember(member: Member): Member
+
+    fun deleteMember(member: Member)
 }
