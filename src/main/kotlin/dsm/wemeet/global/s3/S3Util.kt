@@ -1,24 +1,25 @@
 package dsm.wemeet.global.s3
 
-import com.amazonaws.HttpMethod
-import com.amazonaws.services.s3.AmazonS3
-import com.amazonaws.services.s3.model.CannedAccessControlList
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest
-import com.amazonaws.services.s3.model.ObjectMetadata
-import com.amazonaws.services.s3.model.PutObjectRequest
 import dsm.wemeet.global.s3.exception.BadFileExtException
 import dsm.wemeet.global.s3.exception.EmptyFileException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
-import java.util.Date
+import software.amazon.awssdk.core.sync.RequestBody
+import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
+import software.amazon.awssdk.services.s3.model.GetObjectRequest
+import software.amazon.awssdk.services.s3.model.ObjectCannedACL
+import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.presigner.S3Presigner
+import java.time.Duration
 import java.util.Locale
 import java.util.UUID
 
 @Service
 class S3Util(
-    private val amazonS3: AmazonS3
+    private val s3Client: S3Client
 ) {
 
     @Value("\${cloud.aws.s3.bucket}")
@@ -32,17 +33,18 @@ class S3Util(
         val ext = verificationFile(file)
         val fileName = "$name.$ext"
 
-        val metadata = ObjectMetadata().apply {
-            contentType = MediaType.IMAGE_PNG_VALUE
-            contentLength = file.size
-        }
+        val putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(fileName)
+            .contentType(MediaType.ALL_VALUE)
+            .acl(ObjectCannedACL.PUBLIC_READ)
+            .contentLength(file.size)
+            .build()
 
-        file.inputStream.use {
-            amazonS3.putObject(
-                PutObjectRequest(bucketName, fileName, it, metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead)
-            )
-        }
+        s3Client.putObject(
+            putObjectRequest,
+            RequestBody.fromInputStream(file.inputStream, file.size)
+        )
 
         return fileName
     }
@@ -60,19 +62,27 @@ class S3Util(
     }
 
     fun delete(fileName: String) {
-        amazonS3.deleteObject(bucketName, fileName)
+        s3Client.deleteObject(
+            DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build()
+        )
     }
 
     fun generateUrl(fileName: String): String {
-        val exp = Date().apply {
-            time += s3Exp.toLong()
+        val exp = Duration.ofSeconds(s3Exp.toLong())
+
+        val imgRequest = GetObjectRequest.builder()
+            .bucket(bucketName)
+            .key(fileName)
+            .build()
+
+        val freshUrl = S3Presigner.create().presignGetObject { builder ->
+            builder.getObjectRequest(imgRequest)
+                .signatureDuration(exp)
         }
 
-        return amazonS3.generatePresignedUrl(
-            GeneratePresignedUrlRequest(
-                bucketName,
-                fileName
-            ).withMethod(HttpMethod.GET).withExpiration(exp)
-        ).toString()
+        return freshUrl.url().toString()
     }
 }
