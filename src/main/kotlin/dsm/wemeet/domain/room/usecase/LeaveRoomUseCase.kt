@@ -37,7 +37,7 @@ class LeaveRoomUseCase(
 
         members.firstOrNull()?.let {
             room.owner = it.user
-        } ?: {
+        } ?: run {
             commandRoomService.deleteRoom(room)
         }
     }
