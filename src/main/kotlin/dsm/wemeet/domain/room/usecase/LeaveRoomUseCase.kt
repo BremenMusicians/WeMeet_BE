@@ -1,5 +1,6 @@
 package dsm.wemeet.domain.room.usecase
 
+import dsm.wemeet.domain.room.repository.model.Room
 import dsm.wemeet.domain.room.service.CommandRoomService
 import dsm.wemeet.domain.room.service.QueryRoomService
 import dsm.wemeet.domain.user.service.QueryUserService
@@ -27,13 +28,17 @@ class LeaveRoomUseCase(
         commandRoomService.deleteMember(member)
 
         if (currentRoom.owner.email == currentUser.email) {
-            val members = queryRoomService.queryAllMemberByRoomIdOrderByJoinedAt(currentRoom.id!!)
+            ownerDelegation(currentRoom)
+        }
+    }
 
-            members.firstOrNull()?.let {
-                currentRoom.owner = it.user
-            } ?: {
-                commandRoomService.deleteRoom(currentRoom)
-            }
+    private fun ownerDelegation(room: Room) {
+        val members = queryRoomService.queryAllMemberByRoomIdOrderByJoinedAt(room.id!!)
+
+        members.firstOrNull()?.let {
+            room.owner = it.user
+        } ?: {
+            commandRoomService.deleteRoom(room)
         }
     }
 }
