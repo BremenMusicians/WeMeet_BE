@@ -1,7 +1,7 @@
 package dsm.wemeet.domain.room.presentation
 
-import dsm.wemeet.domain.room.presentation.dto.request.CreateRoomRequest
 import dsm.wemeet.domain.room.presentation.dto.request.CheckRoomPasswordRequest
+import dsm.wemeet.domain.room.presentation.dto.request.CreateRoomRequest
 import dsm.wemeet.domain.room.presentation.dto.response.CreateRoomResponse
 import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
 import dsm.wemeet.domain.room.usecase.CheckRoomPasswordUseCase
