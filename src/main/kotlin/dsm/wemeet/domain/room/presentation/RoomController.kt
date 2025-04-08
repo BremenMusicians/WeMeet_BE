@@ -1,9 +1,10 @@
 package dsm.wemeet.domain.room.presentation
 
 import dsm.wemeet.domain.room.presentation.dto.request.CreateRoomRequest
-import dsm.wemeet.domain.room.presentation.dto.request.JoinRoomRequest
+import dsm.wemeet.domain.room.presentation.dto.request.CheckRoomPasswordRequest
 import dsm.wemeet.domain.room.presentation.dto.response.CreateRoomResponse
 import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
+import dsm.wemeet.domain.room.usecase.CheckRoomPasswordUseCase
 import dsm.wemeet.domain.room.usecase.CreateRoomUseCase
 import dsm.wemeet.domain.room.usecase.JoinRoomUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
@@ -28,7 +29,8 @@ class RoomController(
     private val createRoomUseCase: CreateRoomUseCase,
     private val joinRoomUseCase: JoinRoomUseCase,
     private val queryRoomListUseCase: QueryRoomListUseCase,
-    private val leaveRoomUseCase: LeaveRoomUseCase
+    private val leaveRoomUseCase: LeaveRoomUseCase,
+    private val checkRoomPasswordUseCase: CheckRoomPasswordUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -44,11 +46,9 @@ class RoomController(
     @PostMapping("/{room-id}")
     fun joinRoom(
         @PathVariable("room-id")
-        roomId: UUID,
-        @RequestBody @Valid
-        request: JoinRoomRequest
+        roomId: UUID
     ) {
-        joinRoomUseCase.execute(roomId, request)
+        joinRoomUseCase.execute(roomId)
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -66,5 +66,16 @@ class RoomController(
     @DeleteMapping("/{room-id}")
     fun leaveRoom(@PathVariable("room-id") roomId: UUID) {
         leaveRoomUseCase.execute(roomId)
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/password/{room-id}")
+    fun checkPassword(
+        @PathVariable("room-id")
+        roomId: UUID,
+        @RequestBody @Valid
+        request: CheckRoomPasswordRequest
+    ) {
+        checkRoomPasswordUseCase.execute(roomId, request)
     }
 }

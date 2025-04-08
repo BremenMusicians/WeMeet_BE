@@ -1,7 +1,5 @@
 package dsm.wemeet.domain.room.usecase
 
-import dsm.wemeet.domain.room.exception.RoomPasswordMissMatchException
-import dsm.wemeet.domain.room.presentation.dto.request.JoinRoomRequest
 import dsm.wemeet.domain.room.repository.model.Member
 import dsm.wemeet.domain.room.service.CheckRoomService
 import dsm.wemeet.domain.room.service.CommandRoomService
@@ -20,15 +18,9 @@ class JoinRoomUseCase(
     private val commandRoomService: CommandRoomService
 ) {
 
-    fun execute(roomId: UUID, request: JoinRoomRequest) {
+    fun execute(roomId: UUID) {
         val currentRoom = queryRoomService.queryRoomById(roomId)
         val currentUser = queryUserService.getCurrentUser()
-
-        currentRoom.password?.let {
-            if (it != request.password) {
-                throw RoomPasswordMissMatchException
-            }
-        }
 
         checkRoomService.validateUserNotAlreadyInRoom(currentUser, currentRoom)
 
