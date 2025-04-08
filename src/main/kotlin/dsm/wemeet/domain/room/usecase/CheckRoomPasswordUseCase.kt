@@ -15,9 +15,7 @@ class CheckRoomPasswordUseCase(
         val currentRoom = queryRoomService.queryRoomById(roomId)
 
         currentRoom.password?.let {
-            if (it != request.password) {
-                throw RoomPasswordMissMatchException
-            }
+            if (it != request.password) throw RoomPasswordMissMatchException
         }
     }
 }
