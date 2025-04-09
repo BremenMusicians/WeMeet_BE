@@ -46,7 +46,7 @@ class SecurityConfig(
         val configuration = CorsConfiguration()
 
         // TODO 프론트 배포되면 URL 붙이기
-        //configuration.addAllowedOriginPattern("https://")
+        // configuration.addAllowedOriginPattern("https://")
         configuration.addAllowedOriginPattern("http://localhost:3000")
         configuration.addAllowedHeader("*")
         configuration.addAllowedMethod("*")
