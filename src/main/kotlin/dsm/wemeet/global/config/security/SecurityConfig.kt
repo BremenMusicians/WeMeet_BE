@@ -42,10 +42,12 @@ class SecurityConfig(
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource? {
+    fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
 
-        configuration.addAllowedOriginPattern("*")
+        // TODO 프론트 배포되면 URL 붙이기
+        //configuration.addAllowedOriginPattern("https://")
+        configuration.addAllowedOriginPattern("http://localhost:3000")
         configuration.addAllowedHeader("*")
         configuration.addAllowedMethod("*")
         configuration.allowCredentials = true
