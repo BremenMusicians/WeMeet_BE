@@ -41,5 +41,5 @@ class KickMemberUseCase(
         if (currentUser.email == kickedUser.email) {
             throw InvalidTargetException
         }
-    }   
+    }
 }
