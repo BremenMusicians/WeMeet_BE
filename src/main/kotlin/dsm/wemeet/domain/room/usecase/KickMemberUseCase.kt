@@ -16,7 +16,7 @@ import java.util.UUID
 class KickMemberUseCase(
     private val queryRoomService: QueryRoomService,
     private val queryUserService: QueryUserService,
-    private val commandRoomUseCase: CommandRoomService
+    private val commandRoomService: CommandRoomService
 ) {
 
     fun execute(roomId: UUID, accountId: String) {
@@ -31,7 +31,7 @@ class KickMemberUseCase(
             roomId = currentRoom.id!!
         )
 
-        commandRoomUseCase.deleteMember(kickedMember)
+        commandRoomService.deleteMember(kickedMember)
     }
 
     private fun check(currentUser: User, currentRoom: Room, kickedUser: User) {
