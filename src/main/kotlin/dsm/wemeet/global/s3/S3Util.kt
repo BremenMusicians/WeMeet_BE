@@ -21,7 +21,8 @@ import java.util.UUID
 
 @Service
 class S3Util(
-    private val s3Client: S3Client
+    private val s3Client: S3Client,
+    private val s3Presigner: S3Presigner
 ) {
 
     @Value("\${cloud.aws.s3.bucket}")
@@ -30,7 +31,6 @@ class S3Util(
     @Value("\${cloud.aws.s3.exp-time}")
     lateinit var s3Exp: String
 
-    private val s3Presigner = S3Presigner.create()
 
     fun upload(file: MultipartFile): String {
         val name = UUID.randomUUID()
