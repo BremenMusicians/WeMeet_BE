@@ -7,6 +7,7 @@ import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
 import dsm.wemeet.domain.room.usecase.CheckRoomPasswordUseCase
 import dsm.wemeet.domain.room.usecase.CreateRoomUseCase
 import dsm.wemeet.domain.room.usecase.JoinRoomUseCase
+import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.domain.room.usecase.QueryRoomListUseCase
 import jakarta.validation.Valid
@@ -30,7 +31,8 @@ class RoomController(
     private val joinRoomUseCase: JoinRoomUseCase,
     private val queryRoomListUseCase: QueryRoomListUseCase,
     private val leaveRoomUseCase: LeaveRoomUseCase,
-    private val checkRoomPasswordUseCase: CheckRoomPasswordUseCase
+    private val checkRoomPasswordUseCase: CheckRoomPasswordUseCase,
+    private val kickMemberUseCase: KickMemberUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -77,5 +79,16 @@ class RoomController(
         request: CheckRoomPasswordRequest
     ) {
         checkRoomPasswordUseCase.execute(roomId, request)
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{room-id}/members/{account-id}")
+    fun kickMember(
+        @PathVariable("room-id")
+        roomId: UUID,
+        @PathVariable("account-id")
+        accountId: String
+    ) {
+        kickMemberUseCase.execute(roomId, accountId)
     }
 }
