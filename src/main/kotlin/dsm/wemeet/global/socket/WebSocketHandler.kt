@@ -16,6 +16,7 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class WebSocketHandler(
@@ -26,7 +27,7 @@ class WebSocketHandler(
     private val jwtProvider: JwtProvider
 ) : TextWebSocketHandler() {
 
-    internal val sessionMap = mutableMapOf<String, WebSocketSession>()
+    private val sessionMap: MutableMap<String, WebSocketSession> = ConcurrentHashMap()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val userId = userIdFromSession(session)
