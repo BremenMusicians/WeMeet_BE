@@ -31,7 +31,6 @@ class S3Util(
     @Value("\${cloud.aws.s3.exp-time}")
     lateinit var s3Exp: String
 
-
     fun upload(file: MultipartFile): String {
         val name = UUID.randomUUID()
         val ext = verificationFile(file)
