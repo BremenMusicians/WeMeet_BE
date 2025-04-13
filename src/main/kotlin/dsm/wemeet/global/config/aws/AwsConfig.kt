@@ -24,7 +24,7 @@ class AwsConfig(
 
         return S3Client.builder()
             .region(Region.of(region))
-            .credentialsProvider(StaticCredentialsProvider.create(awsCredentials)) // Set credentials
+            .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
             .build()
     }
 }
