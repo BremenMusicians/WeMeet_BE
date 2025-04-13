@@ -1,5 +1,6 @@
-package dsm.wemeet.domain.chat.repository.model
+package dsm.wemeet.domain.message.repository.model
 
+import dsm.wemeet.domain.chat.repository.model.Chat
 import dsm.wemeet.domain.user.repository.model.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
