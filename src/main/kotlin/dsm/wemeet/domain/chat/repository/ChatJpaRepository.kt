@@ -10,10 +10,10 @@ interface ChatJpaRepository : JpaRepository<Chat, UUID> {
 
     @Query(
         """
-    SELECT c FROM Chat c 
-    WHERE (c.user1.email = :email1 AND c.user2.email = :email2) 
-       OR (c.user1.email = :email2 AND c.user2.email = :email1)
-"""
+        SELECT c FROM Chat c
+        WHERE (c.user1.email = :email1 AND c.user2.email = :email2)
+        OR (c.user1.email = :email2 AND c.user2.email = :email1)
+        """
     )
     fun findChatByUsers(
         @Param("email1") user1: String,
