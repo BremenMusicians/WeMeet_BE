@@ -24,8 +24,6 @@ class UserSignInUseCase(
             throw PasswordMissMatchException
         }
 
-//        println(passwordEncoder.encode("jungjio45298114!"))
-
         return jwtProvider.generateToken(user.email)
     }
 }
