@@ -3,7 +3,7 @@ package dsm.wemeet.domain.message.usecase
 import dsm.wemeet.domain.chat.repository.model.Chat
 import dsm.wemeet.domain.chat.service.QueryChatService
 import dsm.wemeet.domain.chat.service.SaveChatService
-import dsm.wemeet.domain.message.presentation.dto.reseonse.MessageResponse
+import dsm.wemeet.domain.message.presentation.dto.response.MessageResponse
 import dsm.wemeet.domain.message.repository.model.Message
 import dsm.wemeet.domain.message.service.SaveMessageService
 import dsm.wemeet.domain.user.service.QueryUserService

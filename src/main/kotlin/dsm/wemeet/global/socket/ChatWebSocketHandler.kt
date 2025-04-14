@@ -35,7 +35,7 @@ class ChatWebSocketHandler(
         val receiverSession = sessionMap[toUserId]
 
         val responseJson = JSONObject()
-            .put("from", result.from)
+            .put("sender", result.sender)
             .put("content", result.content)
             .put("timestamp", result.timestamp)
 
@@ -55,6 +55,6 @@ class ChatWebSocketHandler(
 
     private fun parseMessage(payload: String): Pair<String, String> {
         val json = JSONObject(payload)
-        return json.getString("to") to json.getString("content")
+        return json.getString("receiver") to json.getString("content")
     }
 }
