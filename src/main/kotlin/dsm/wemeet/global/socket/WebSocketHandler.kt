@@ -1,6 +1,5 @@
 package dsm.wemeet.global.socket
 
-import dsm.wemeet.domain.chat.exception.ChatNotFoundException
 import dsm.wemeet.domain.chat.repository.model.Chat
 import dsm.wemeet.domain.chat.service.QueryChatService
 import dsm.wemeet.domain.chat.service.SaveChatService
@@ -48,7 +47,7 @@ class WebSocketHandler(
         val sender = userJpaRepository.findByEmail(senderId) ?: return
         val receiver = userJpaRepository.findByEmail(toUserId) ?: return
 
-        val chat = getOrCreateChat(sender, receiver) ?: throw ChatNotFoundException
+        val chat = getOrCreateChat(sender, receiver)
 
         val newMessage = Message(
             chat = chat,
@@ -77,7 +76,7 @@ class WebSocketHandler(
         return json.getString("to") to json.getString("content")
     }
 
-    private fun getOrCreateChat(user1: User, user2: User): Chat? {
+    private fun getOrCreateChat(user1: User, user2: User): Chat {
         val existingChat = queryChatService.queryChatByUser(user1.email, user2.email)
         return existingChat ?: saveChatService.save(Chat(user1 = user1, user2 = user2))
     }

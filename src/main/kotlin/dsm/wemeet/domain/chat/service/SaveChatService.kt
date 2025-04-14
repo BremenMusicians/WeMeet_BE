@@ -4,5 +4,5 @@ import dsm.wemeet.domain.chat.repository.model.Chat
 
 interface SaveChatService {
 
-    fun save(chat: Chat): Chat?
+    fun save(chat: Chat): Chat
 }
