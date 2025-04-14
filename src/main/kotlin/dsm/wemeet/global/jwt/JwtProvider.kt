@@ -87,7 +87,7 @@ class JwtProvider(
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
     }
 
-    private fun getJws(token: String): Jws<Claims> {
+    fun getJws(token: String): Jws<Claims> {
         return try {
             Jwts.parserBuilder().setSigningKey(jwtProperties.secret).build().parseClaimsJws(token)
         } catch (e: ExpiredJwtException) {
