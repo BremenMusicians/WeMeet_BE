@@ -7,6 +7,7 @@ enum class ErrorCode(
 
     BAD_FILE_EXTENSION(400, "Bad File Extension"),
     FILE_NOT_EXIST(400, "File Not Exist"),
+    INVALID_TARGET_EXCEPTION(400, "Invalid Target Exception"),
 
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
@@ -15,6 +16,7 @@ enum class ErrorCode(
     EXPIRED_MAIL_CODE_EXCEPTION(401, "Expired Mail Code Exception"),
 
     ROOM_PASSWORD_MISS_MATCH(403, "Room Password Miss Match"),
+    IS_NOT_OWNER_EXCEPTION(403, "Is Not Owner Exception"),
 
     USER_NOT_FOUND(404, "User Not Found"),
     ROOM_NOT_FOUND(404, "Room Not Found"),
