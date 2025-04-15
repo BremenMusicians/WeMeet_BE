@@ -4,5 +4,5 @@ import dsm.wemeet.domain.message.repository.model.Message
 import java.util.UUID
 
 interface QueryMessageService {
-    fun queryMessageListByChat(chatId: UUID): List<Message>?
+    fun queryMessageListByChat(chatId: UUID): List<Message>
 }

@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 
 interface MessageJpaRepository : JpaRepository<Message, UUID> {
-    fun findAllByChatId(chatId: UUID): List<Message>?
+    fun findAllByChatId(chatId: UUID): List<Message>
 }
