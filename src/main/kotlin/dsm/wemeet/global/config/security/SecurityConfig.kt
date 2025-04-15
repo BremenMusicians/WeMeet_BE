@@ -47,7 +47,7 @@ class SecurityConfig(
 
         // TODO 프론트 배포되면 URL 붙이기
         // configuration.addAllowedOriginPattern("https://")
-        configuration.addAllowedOriginPattern("http://localhost:3000")
+        configuration.addAllowedOriginPattern("https://localhost:3000")
         configuration.addAllowedHeader("*")
         configuration.addAllowedMethod("*")
         configuration.allowCredentials = true
