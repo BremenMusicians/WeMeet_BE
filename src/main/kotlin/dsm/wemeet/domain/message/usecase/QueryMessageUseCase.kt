@@ -17,7 +17,6 @@ class QueryMessageUseCase(
     fun execute(chatId: UUID): List<MessageResponse> {
         val chat = queryChatService.queryChatById(chatId)
         return queryMessageService.queryMessageListByChat(chat.id!!)
-            .orEmpty()
             .map {
                 MessageResponse(
                     sender = it.sender.email,
