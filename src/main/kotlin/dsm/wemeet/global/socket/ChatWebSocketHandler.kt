@@ -37,7 +37,7 @@ class ChatWebSocketHandler(
         val responseJson = JSONObject()
             .put("sender", result.sender)
             .put("content", result.content)
-            .put("timestamp", result.timestamp)
+            .put("sendAt", result.sendAt)
 
         receiverSession?.takeIf { it.isOpen }?.sendMessage(TextMessage(responseJson.toString()))
     }
