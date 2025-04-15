@@ -9,6 +9,7 @@ import dsm.wemeet.domain.message.service.SaveMessageService
 import dsm.wemeet.domain.user.service.QueryUserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional
@@ -20,15 +21,15 @@ class SendMessageUseCase(
 ) {
 
     fun sendMessage(sender: String, receiver: String, content: String): MessageResponse {
-        val sender = queryUserService.queryUserByEmail(sender)
-        val receiver = queryUserService.queryUserByEmail(receiver)
+        val sendUser = queryUserService.queryUserByEmail(sender)
+        val receiveUser = queryUserService.queryUserByEmail(receiver)
 
-        val chat = queryChatService.queryChatByUser(sender.email, receiver.email)
-            ?: saveChatService.save(Chat(user1 = sender, user2 = receiver))
+        val chat = queryChatService.queryChatByUser(sendUser.email, receiveUser.email)
+            ?: saveChatService.save(Chat(user1 = sendUser, user2 = receiveUser))
 
-        val message = Message(chat = chat, sender = sender, content = content)
+        val message = Message(chat = chat, sender = sendUser, content = content)
         saveMessageService.save(message)
 
-        return MessageResponse(sender.email, content, System.currentTimeMillis())
+        return MessageResponse(sendUser.email, content, LocalDateTime.now())
     }
 }

@@ -29,7 +29,7 @@ class CreateRoomUseCase(
             )
         )
 
-        val member = commandRoomService.saveMember(
+        commandRoomService.saveMember(
             Member(
                 room = room,
                 user = currentUser
