@@ -34,6 +34,6 @@ class SaveMessageUseCase(
         saveMessageService.save(message)
         chat.lastSentAt = sendTime
 
-        return MessageResponse(sendUser.email, content, LocalDateTime.now())
+        return MessageResponse(sendUser.email, content, sendTime)
     }
 }
