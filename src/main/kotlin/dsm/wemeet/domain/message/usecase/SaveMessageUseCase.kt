@@ -13,14 +13,14 @@ import java.time.LocalDateTime
 
 @Service
 @Transactional
-class SendMessageUseCase(
+class SaveMessageUseCase(
     private val queryUserService: QueryUserService,
     private val queryChatService: QueryChatService,
     private val saveChatService: SaveChatService,
     private val saveMessageService: SaveMessageService
 ) {
 
-    fun sendMessage(sender: String, receiver: String, content: String): MessageResponse {
+    fun execute(sender: String, receiver: String, content: String): MessageResponse {
         val sendUser = queryUserService.queryUserByEmail(sender)
         val receiveUser = queryUserService.queryUserByEmail(receiver)
 
@@ -28,7 +28,11 @@ class SendMessageUseCase(
             ?: saveChatService.save(Chat(user1 = sendUser, user2 = receiveUser))
 
         val message = Message(chat = chat, sender = sendUser, content = content)
+
+        val sendTime = LocalDateTime.now()
+
         saveMessageService.save(message)
+        chat.lastSentAt = sendTime
 
         return MessageResponse(sendUser.email, content, LocalDateTime.now())
     }
