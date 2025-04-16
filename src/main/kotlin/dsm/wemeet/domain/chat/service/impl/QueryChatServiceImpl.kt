@@ -17,4 +17,7 @@ class QueryChatServiceImpl(
 
     override fun queryChatById(id: UUID) =
         chatJpaRepository.findByIdOrNull(id) ?: throw ChatNotFoundException
+
+    override fun queryChatsByUserOrderByRecent(user: String) =
+        chatJpaRepository.findChatsByUserOrderByRecent(user)
 }
