@@ -1,6 +1,6 @@
 package dsm.wemeet.global.socket
 
-import dsm.wemeet.domain.message.usecase.SendMessageUseCase
+import dsm.wemeet.domain.message.usecase.SaveMessageUseCase
 import dsm.wemeet.global.jwt.JwtProvider
 import dsm.wemeet.global.jwt.exception.InvalidTokenException
 import org.json.JSONObject
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Component
 class ChatWebSocketHandler(
     private val jwtProvider: JwtProvider,
-    private val sendMessageUseCase: SendMessageUseCase
+    private val saveMessageUseCase: SaveMessageUseCase
 ) : TextWebSocketHandler() {
 
     private val sessionMap: MutableMap<String, WebSocketSession> = ConcurrentHashMap()
@@ -31,7 +31,7 @@ class ChatWebSocketHandler(
         val senderId = userIdFromSession(session) ?: return
         val (toUserId, content) = parseMessage(message.payload)
 
-        val result = sendMessageUseCase.sendMessage(senderId, toUserId, content)
+        val result = saveMessageUseCase.execute(senderId, toUserId, content)
         val receiverSession = sessionMap[toUserId]
 
         val responseJson = JSONObject()
