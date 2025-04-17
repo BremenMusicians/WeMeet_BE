@@ -1,6 +1,7 @@
 package dsm.wemeet.domain.chat.usercase
 
 import dsm.wemeet.domain.chat.presentation.dto.response.ChatListResponse
+import dsm.wemeet.domain.chat.presentation.dto.response.ChatListResponses
 import dsm.wemeet.domain.chat.repository.model.Chat
 import dsm.wemeet.domain.chat.service.QueryChatService
 import dsm.wemeet.domain.message.service.QueryMessageService
@@ -16,21 +17,24 @@ class QueryChatListUseCase(
     private val queryMessageService: QueryMessageService
 ) {
 
-    fun execute(): List<ChatListResponse> {
+    fun execute(): ChatListResponses {
         val currentUser = queryUserService.getCurrentUser()
 
-        return queryChatService.queryChatsByUserOrderByRecent(currentUser.email)
-            .map { it ->
-                val user = getOpponent(it, currentUser)
-                val lastMessage = queryMessageService.queryLastMessageByChatId(it.id!!)
+        val chats = queryChatService.queryChatsByUserOrderByRecent(currentUser.email)
+            .map { chat ->
+                val user = getOpponent(chat, currentUser)
+                val lastMessage = queryMessageService.queryLastNullableMessageByChatId(chat.id!!)
+
                 ChatListResponse(
-                    chatId = it.id!!,
+                    chatId = chat.id!!,
                     accountId = user.accountId,
                     profile = user.profile,
                     position = user.position.split(",").map { Position.valueOf(it) },
                     lastMessage = lastMessage?.content
                 )
             }
+
+        return ChatListResponses(chats = chats)
     }
 
     private fun getOpponent(chat: Chat, currentUser: User): User {

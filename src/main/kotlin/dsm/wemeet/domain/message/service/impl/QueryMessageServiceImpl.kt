@@ -13,6 +13,6 @@ class QueryMessageServiceImpl(
     override fun queryMessageListByChat(chatId: UUID) =
         messageJpaRepository.findAllByChatId(chatId)
 
-    override fun queryLastMessageByChatId(chatId: UUID) =
+    override fun queryLastNullableMessageByChatId(chatId: UUID) =
         messageJpaRepository.findFirstByChatIdOrderBySendAtDesc(chatId)
 }
