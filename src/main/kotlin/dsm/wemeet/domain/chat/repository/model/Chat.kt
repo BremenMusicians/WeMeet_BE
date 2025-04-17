@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity
@@ -24,5 +25,8 @@ class Chat(
 
     @ManyToOne(optional = false, targetEntity = User::class)
     @JoinColumn(name = "user2_email", referencedColumnName = "email", nullable = false)
-    val user2: User
+    val user2: User,
+
+    @Column(name = "last_sent_at", nullable = false)
+    var lastSentAt: LocalDateTime = LocalDateTime.now()
 )

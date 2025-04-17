@@ -5,4 +5,6 @@ import java.util.UUID
 
 interface QueryMessageService {
     fun queryMessageListByChat(chatId: UUID): List<Message>
+
+    fun queryLastNullableMessageByChatId(chatId: UUID): Message?
 }
