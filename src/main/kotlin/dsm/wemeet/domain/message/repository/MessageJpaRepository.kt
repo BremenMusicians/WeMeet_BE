@@ -6,4 +6,6 @@ import java.util.*
 
 interface MessageJpaRepository : JpaRepository<Message, UUID> {
     fun findAllByChatId(chatId: UUID): List<Message>
+
+    fun findFirstByChatIdOrderBySendAtDesc(chatId: UUID): Message?
 }
