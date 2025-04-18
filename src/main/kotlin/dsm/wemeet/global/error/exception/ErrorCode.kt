@@ -10,6 +10,7 @@ enum class ErrorCode(
     FILE_NOT_EXIST(400, "File Not Exist"),
     INVALID_TARGET_EXCEPTION(400, "Invalid Target Exception"),
 
+    UNAUTHORIZED(401, "Unauthorized"),
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
     EXPIRE_TOKEN_EXCEPTION(401, "Expire Token Exception"),
