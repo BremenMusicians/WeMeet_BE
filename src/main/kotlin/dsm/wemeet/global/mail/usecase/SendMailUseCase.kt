@@ -10,6 +10,7 @@ import jakarta.mail.internet.MimeMessage
 import org.springframework.core.io.ClassPathResource
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import kotlin.random.Random
@@ -22,6 +23,7 @@ class SendMailUseCase(
     private val redisUtil: RedisUtil
 ) {
 
+    @Async
     fun execute(request: SendMailRequest) {
         val cleanEmail = request.mail.replace("\"", "")
         queryUserService.existsByEmail(cleanEmail)
