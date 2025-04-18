@@ -23,7 +23,7 @@ class SendMailUseCase(
     private val redisUtil: RedisUtil
 ) {
 
-    @Async
+    @Async("taskExecutor")
     fun execute(request: SendMailRequest) {
         val cleanEmail = request.mail.replace("\"", "")
         queryUserService.existsByEmail(cleanEmail)
