@@ -53,7 +53,8 @@ class RoomWebSocketHandler(
             // WebRTC 연결 정보 관련 타입
             "offer", "answer", "candidate" -> {
                 signal.to?.let { targetEmail ->
-                    peers.find { it.attributes["email"] == targetEmail }?.sendMessage(TextMessage(signal.toString()))
+                    peers.find { it.attributes["email"] == targetEmail }
+                        ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
             }
         }
@@ -74,8 +75,6 @@ class RoomWebSocketHandler(
 
             if (list.isEmpty()) roomPeers.remove(roomId)
         }
-
-        session.close()
     }
 
     private fun getRoomId(session: WebSocketSession): UUID =
