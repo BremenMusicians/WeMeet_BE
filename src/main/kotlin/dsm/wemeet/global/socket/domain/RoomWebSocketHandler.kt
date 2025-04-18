@@ -33,7 +33,7 @@ class RoomWebSocketHandler(
         }
 
         // 신규 피어에게 기존 멤버 정보 발송
-        val existsPeerMsg = createMsg("exist", peers.joinToString(",") { it.attributes["email"] as String })
+        val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.attributes["email"] as String }))
         session.sendMessage(TextMessage(existsPeerMsg.toString()))
 
         peers += session
