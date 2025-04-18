@@ -19,7 +19,7 @@ class PathParsingInterceptor(
     ): Boolean {
         val path = request.uri.path
 
-        if (template.matches(path)) {
+        if (!template.matches(path)) {
             return false
         }
 
