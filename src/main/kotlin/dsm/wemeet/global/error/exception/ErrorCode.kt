@@ -5,6 +5,7 @@ enum class ErrorCode(
     val message: String
 ) {
 
+    BAD_REQUEST(400, "Bad Request"),
     BAD_FILE_EXTENSION(400, "Bad File Extension"),
     FILE_NOT_EXIST(400, "File Not Exist"),
     INVALID_TARGET_EXCEPTION(400, "Invalid Target Exception"),
