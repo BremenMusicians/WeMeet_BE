@@ -5,6 +5,7 @@ import dsm.wemeet.global.config.filter.FilterConfig
 import dsm.wemeet.global.jwt.JwtProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -28,7 +29,38 @@ class SecurityConfig(
 
         http.authorizeHttpRequests { authorize ->
             authorize
-                .anyRequest().permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/signUp").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/signIn").permitAll()
+                .requestMatchers(HttpMethod.POST, "/user/refresh").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/user/profile").authenticated()
+                .requestMatchers(HttpMethod.PATCH, "/user/update").authenticated()
+                .requestMatchers(HttpMethod.GET, "/user/myPage").authenticated()
+                .requestMatchers(HttpMethod.GET, "/user/exist/{account-id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/user/accountId").authenticated()
+                .requestMatchers(HttpMethod.GET, "/user").authenticated()
+
+                .requestMatchers(HttpMethod.POST, "/mail").permitAll()
+                .requestMatchers(HttpMethod.POST, "/mail/check").permitAll()
+
+                .requestMatchers(HttpMethod.GET, "/friends").authenticated()
+                .requestMatchers(HttpMethod.GET, "/friends/search").authenticated()
+                .requestMatchers(HttpMethod.POST, "/friends/{friend-id}").authenticated()
+                .requestMatchers(HttpMethod.POST, "/friends/request/{friend-id}").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/friends/request/{friend-id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/friends/my").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/friends/{friend-id}").authenticated()
+
+                .requestMatchers(HttpMethod.POST, "/rooms").authenticated()
+                .requestMatchers(HttpMethod.POST, "/rooms/{room-id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/rooms").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/rooms/{room-id}").authenticated()
+                .requestMatchers(HttpMethod.POST, "/rooms/password/{room-id}").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/rooms/{room-id}/members/{account-id}").authenticated()
+
+                .requestMatchers(HttpMethod.GET, "/chat/list").authenticated()
+                .requestMatchers(HttpMethod.GET, "/message/{chat-id}").authenticated()
+
+                .anyRequest().denyAll()
         }
             .apply(FilterConfig(jwtProvider, objectMapper))
 
