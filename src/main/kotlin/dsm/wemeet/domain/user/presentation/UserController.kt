@@ -63,7 +63,7 @@ class UserController(
     fun existAccountId(@PathVariable(name = "account-id") accountId: String) = existAccountIdUseCase.execute(accountId)
 
     @GetMapping("/accountId")
-    fun giveMeUserAccountId() = queryAccountIdUseCase.execute()
+    fun getMyAccountId() = queryAccountIdUseCase.execute()
 
     @PatchMapping("/update")
     fun updateUserInfo(
