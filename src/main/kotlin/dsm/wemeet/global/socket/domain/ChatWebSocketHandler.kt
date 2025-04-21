@@ -1,4 +1,4 @@
-package dsm.wemeet.global.socket
+package dsm.wemeet.global.socket.domain
 
 import dsm.wemeet.domain.message.usecase.SaveMessageUseCase
 import dsm.wemeet.global.jwt.JwtProvider

@@ -1,0 +1,95 @@
+package dsm.wemeet.global.socket.domain
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import dsm.wemeet.global.error.exception.BadRequestException
+import dsm.wemeet.global.socket.vo.Signal
+import org.json.JSONObject
+import org.springframework.stereotype.Component
+import org.springframework.web.socket.CloseStatus
+import org.springframework.web.socket.TextMessage
+import org.springframework.web.socket.WebSocketSession
+import org.springframework.web.socket.handler.TextWebSocketHandler
+import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
+import java.util.concurrent.CopyOnWriteArrayList
+
+@Component
+class RoomWebSocketHandler(
+    private val objectMapper: ObjectMapper
+) : TextWebSocketHandler() {
+
+    private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
+
+    override fun afterConnectionEstablished(session: WebSocketSession) {
+        val userEmail = getUserEmail(session)
+        val roomId = getRoomId(session)
+        val peers = roomPeers.computeIfAbsent(roomId) { CopyOnWriteArrayList() }
+
+        // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
+        val joinMsg = createMsg("join", userEmail)
+        peers.forEach { peer ->
+            if (peer.isOpen) peer.sendMessage(TextMessage(joinMsg.toString()))
+        }
+
+        // 신규 피어에게 기존 멤버 정보 발송
+        val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.attributes["email"] as String }))
+        session.sendMessage(TextMessage(existsPeerMsg.toString()))
+
+        peers += session
+    }
+
+    override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
+
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) = leaveAndCleanUp(session)
+
+    override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
+        val roomId = getRoomId(session)
+        val peers = roomPeers[roomId] ?: return
+
+        val signal = objectMapper.readValue(message.payload, Signal::class.java)
+
+        when (signal.type) {
+            // WebRTC 연결 정보 관련 타입
+            "offer", "answer", "candidate" -> {
+                signal.to?.let { targetEmail ->
+                    peers.find { it.attributes["email"] == targetEmail }
+                        ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
+                }
+            }
+        }
+    }
+
+    private fun leaveAndCleanUp(session: WebSocketSession) {
+        val userEmail = getUserEmail(session)
+        val roomId = getRoomId(session)
+
+        roomPeers[roomId]?.let { list ->
+            list.remove(session)
+
+            // 남은 멤버에게 퇴장 발송
+            val leaveMsg = createMsg("leave", userEmail)
+            list.forEach { peer ->
+                if (peer.isOpen) peer.sendMessage(TextMessage(leaveMsg.toString()))
+            }
+
+            if (list.isEmpty()) roomPeers.remove(roomId)
+        }
+    }
+
+    private fun getRoomId(session: WebSocketSession): UUID =
+        runCatching {
+            UUID.fromString(session.attributes["roomId"]!!.toString())
+        }.getOrElse {
+            throw BadRequestException
+        }
+
+    // 이미 AuthorizerInterceptor 에서 타입 확인을 해줬음
+    private fun getUserEmail(session: WebSocketSession): String =
+        session.attributes["email"]!!.toString()
+
+    private fun createMsg(type: String, payload: String): JSONObject =
+        JSONObject()
+            .put("type", type)
+            .put("payload", payload)
+}

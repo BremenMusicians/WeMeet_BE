@@ -5,10 +5,12 @@ enum class ErrorCode(
     val message: String
 ) {
 
+    BAD_REQUEST(400, "Bad Request"),
     BAD_FILE_EXTENSION(400, "Bad File Extension"),
     FILE_NOT_EXIST(400, "File Not Exist"),
     INVALID_TARGET_EXCEPTION(400, "Invalid Target Exception"),
 
+    UNAUTHORIZED(401, "Unauthorized"),
     PASSWORD_MISS_MATCH(401, "Password Miss Match"),
     INVALID_TOKEN_EXCEPTION(401, "Invalid Token Exception"),
     EXPIRE_TOKEN_EXCEPTION(401, "Expire Token Exception"),
