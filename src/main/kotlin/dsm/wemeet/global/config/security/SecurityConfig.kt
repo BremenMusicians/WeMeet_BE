@@ -45,9 +45,10 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
 
-        // TODO 프론트 배포되면 URL 붙이기
-        // configuration.addAllowedOriginPattern("https://")
-        configuration.addAllowedOriginPattern("*")
+        configuration.allowedOrigins = listOf (
+            "http://localhost:3000",
+            "https://we-meet-fe.vercel.app"
+        )
         configuration.addAllowedHeader("*")
         configuration.addAllowedMethod("*")
         configuration.allowCredentials = true
