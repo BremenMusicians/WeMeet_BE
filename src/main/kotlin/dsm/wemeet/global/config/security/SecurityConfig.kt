@@ -48,7 +48,7 @@ class SecurityConfig(
         configuration.allowedOrigins = listOf(
             "http://localhost:3000",
             "http://127.0.0.1:3000",
-            "https://we-meet-fe.vercel.app",
+            "https://we-meet-fe.vercel.app"
         )
         configuration.addAllowedHeader("*")
         configuration.addAllowedMethod("*")
