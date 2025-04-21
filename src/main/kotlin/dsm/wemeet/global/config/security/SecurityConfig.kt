@@ -39,23 +39,5 @@ class SecurityConfig(
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
-    @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-
-        configuration.allowedOrigins = listOf(
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "https://we-meet-fe.vercel.app"
-        )
-        configuration.addAllowedHeader("*")
-        configuration.addAllowedMethod("*")
-        configuration.allowCredentials = true
-
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
-    }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()    
 }
