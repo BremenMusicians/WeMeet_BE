@@ -4,6 +4,7 @@ import dsm.wemeet.domain.user.presentation.dto.request.SignInRequest
 import dsm.wemeet.domain.user.presentation.dto.request.SignUpRequest
 import dsm.wemeet.domain.user.presentation.dto.request.UpdateUserInfoRequest
 import dsm.wemeet.domain.user.usecase.ExistAccountIdUseCase
+import dsm.wemeet.domain.user.usecase.QueryAccountIdUseCase
 import dsm.wemeet.domain.user.usecase.UpdateProfileUseCase
 import dsm.wemeet.domain.user.usecase.UpdateUserInfoUseCase
 import dsm.wemeet.domain.user.usecase.UserMyPageUseCase
@@ -33,7 +34,8 @@ class UserController(
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     private val existAccountIdUseCase: ExistAccountIdUseCase,
     private val userTokenRefreshUseCase: UserTokenRefreshUseCase,
-    private val updateProfileUseCase: UpdateProfileUseCase
+    private val updateProfileUseCase: UpdateProfileUseCase,
+    private val queryAccountIdUseCase: QueryAccountIdUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -59,6 +61,9 @@ class UserController(
 
     @GetMapping("/exist/{account-id}")
     fun existAccountId(@PathVariable(name = "account-id") accountId: String) = existAccountIdUseCase.execute(accountId)
+
+    @GetMapping("/accountId")
+    fun getMyAccountId() = queryAccountIdUseCase.execute()
 
     @PatchMapping("/update")
     fun updateUserInfo(
