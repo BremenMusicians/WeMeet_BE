@@ -59,7 +59,7 @@ class RoomController(
         @RequestParam(value = "page")
         @Min(0)
         page: Int,
-        @RequestParam(value = "name", required = false) name: String?
+        @RequestParam(value = "name", required = false, defaultValue = "") name: String
     ): QueryRoomListResponse {
         return queryRoomListUseCase.execute(page, name)
     }

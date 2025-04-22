@@ -11,7 +11,7 @@ class QueryRoomListUseCase(
     private val queryRoomService: QueryRoomService
 ) {
 
-    fun execute(page: Int, name: String?): QueryRoomListResponse {
+    fun execute(page: Int, name: String): QueryRoomListResponse {
         val rooms = queryRoomService.queryRoomListByNameContainsAndOffsetByPage(page, name)
         val count = queryRoomService.countByNameContains(name)
 
