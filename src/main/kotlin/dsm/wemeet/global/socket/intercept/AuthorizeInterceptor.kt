@@ -21,7 +21,8 @@ class AuthorizeInterceptor(
         val token = UriComponentsBuilder.fromUri(request.uri).build()
             .queryParams.getFirst("token")
             ?.removePrefix("Bearer ")?.trim() ?: run {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED) return false
+            response.setStatusCode(HttpStatus.UNAUTHORIZED)
+            return false
         }
 
         return try {
