@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -44,8 +45,7 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.POST, "/mail/check").permitAll()
                 .requestMatchers(HttpMethod.GET, "/friends").authenticated()
                 .requestMatchers(HttpMethod.POST, "/friends/{friend-id}").authenticated()
-                .requestMatchers(HttpMethod.POST, "/friends/request/{friend-id}").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/friends/request/{friend-id}").authenticated()
+                .requestMatchers(HttpMethod.PATCH, "/friends/request/{friend-id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/friends/my").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/friends/{friend-id}").authenticated()
                 .requestMatchers(HttpMethod.POST, "/rooms").authenticated()
@@ -65,6 +65,13 @@ class SecurityConfig(
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
+
+    @Bean
+    fun webSecurityCustomizer(): WebSecurityCustomizer {
+        return WebSecurityCustomizer { web ->
+            web.ignoring().requestMatchers("/ws/**")
+        }
+    }
 
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {

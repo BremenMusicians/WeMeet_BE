@@ -19,11 +19,13 @@ enum class ErrorCode(
 
     ROOM_PASSWORD_MISS_MATCH(403, "Room Password Miss Match"),
     IS_NOT_OWNER_EXCEPTION(403, "Is Not Owner Exception"),
+    UNRELATED_FRIEND_REQUEST(403, "Unrelated Friend Request"),
 
     USER_NOT_FOUND(404, "User Not Found"),
     ROOM_NOT_FOUND(404, "Room Not Found"),
     MEMBER_NOT_FOUND(404, "Member Not Found"),
     CHAT_NOT_FOUND(404, "Chat Not Found"),
+    FRIEND_NOT_FOUND(404, "Friend Not Found"),
 
     USER_ALREADY_EXISTS(409, "User Already Exists"),
     FRIEND_ALREADY_EXISTS(409, "Friend Already Exists"),
