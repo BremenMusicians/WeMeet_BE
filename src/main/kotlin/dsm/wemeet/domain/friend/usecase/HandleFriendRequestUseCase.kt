@@ -16,7 +16,7 @@ class HandleFriendRequestUseCase(
     private val commandFriendService: CommandFriendService
 ) {
 
-    fun execute(friendId: UUID, status: Boolean) {
+    fun execute(friendId: UUID, accept: Boolean) {
         val currentUser = queryUserService.getCurrentUser()
         val friendRequest = queryFriendService.queryFriendById(friendId)
 
@@ -24,7 +24,7 @@ class HandleFriendRequestUseCase(
             throw UnrelatedFriendRequestException
         }
 
-        if (status) {
+        if (accept) {
             friendRequest.isAccepted = true
         } else {
             commandFriendService.deleteFriend(friendRequest)

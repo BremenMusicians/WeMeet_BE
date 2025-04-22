@@ -26,7 +26,7 @@ class FriendController(
     }
 
     @PatchMapping("/request/{friend-id}")
-    fun handleFriendRequest(@PathVariable("friend-id") friendId: UUID, @RequestParam("status") status: Boolean) {
-        handleFriendRequestUseCase.execute(friendId, status)
+    fun handleFriendRequest(@PathVariable("friend-id") friendId: UUID, @RequestParam("accept") accept: Boolean) {
+        handleFriendRequestUseCase.execute(friendId, accept)
     }
 }
