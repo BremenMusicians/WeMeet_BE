@@ -6,6 +6,7 @@ import org.springframework.http.server.ServerHttpRequest
 import org.springframework.http.server.ServerHttpResponse
 import org.springframework.web.socket.WebSocketHandler
 import org.springframework.web.socket.server.HandshakeInterceptor
+import org.springframework.web.util.UriComponentsBuilder
 import java.lang.Exception
 
 class AuthorizeInterceptor(
@@ -17,10 +18,10 @@ class AuthorizeInterceptor(
         wsHandler: WebSocketHandler,
         attributes: MutableMap<String, Any>
     ): Boolean {
-        val token = request.headers.getFirst("Authorization")
+        val token = UriComponentsBuilder.fromUri(request.uri).build()
+            .queryParams.getFirst("token")
             ?.removePrefix("Bearer ")?.trim() ?: run {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED)
-            return false
+            response.setStatusCode(HttpStatus.UNAUTHORIZED) return false
         }
 
         return try {
