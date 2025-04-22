@@ -1,6 +1,6 @@
 package dsm.wemeet.domain.friend.service.impl
 
-import dsm.wemeet.domain.friend.exception.FriendAlreadyExistsException
+import dsm.wemeet.domain.friend.exception.FriendNotFoundException
 import dsm.wemeet.domain.friend.repository.FriendJpaRepository
 import dsm.wemeet.domain.friend.repository.model.Friend
 import dsm.wemeet.domain.friend.service.QueryFriendService
@@ -17,5 +17,5 @@ class QueryFriendServiceImpl(
         friendJpaRepository.findAcceptedFriendsByUser(userId)
 
     override fun queryFriendById(id: UUID) =
-        friendJpaRepository.findByIdOrNull(id) ?: throw FriendAlreadyExistsException
+        friendJpaRepository.findByIdOrNull(id) ?: throw FriendNotFoundException
 }

@@ -16,9 +16,9 @@ class HandleFriendRequestUseCase(
     private val commandFriendService: CommandFriendService
 ) {
 
-    fun execute(friendId: String, status: Boolean) {
+    fun execute(friendId: UUID, status: Boolean) {
         val currentUser = queryUserService.getCurrentUser()
-        val friendRequest = queryFriendService.queryFriendById(UUID.fromString(friendId))
+        val friendRequest = queryFriendService.queryFriendById(friendId)
 
         if (friendRequest.receiver.email != currentUser.email) {
             throw UnrelatedFriendRequestException

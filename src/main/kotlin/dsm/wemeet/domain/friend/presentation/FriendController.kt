@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/friends")
@@ -25,7 +26,7 @@ class FriendController(
     }
 
     @PatchMapping("/request/{friend-id}")
-    fun handleFriendRequest(@PathVariable("friend-id") friendId: String, @RequestParam("status") status: Boolean) {
+    fun handleFriendRequest(@PathVariable("friend-id") friendId: UUID, @RequestParam("status") status: Boolean) {
         handleFriendRequestUseCase.execute(friendId, status)
     }
 }
