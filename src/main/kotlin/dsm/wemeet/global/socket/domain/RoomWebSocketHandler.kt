@@ -80,9 +80,8 @@ class RoomWebSocketHandler(
                 }
 
                 peers.find { it.attributes["email"] == signal.to }
-                    ?.let { peer ->
-                        if (peer.isOpen) peer.close(CloseStatus(4003))
-                    }
+                    ?.takeIf { it.isOpen }
+                    ?.close(CloseStatus(4003))
             }
         }
     }
