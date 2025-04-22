@@ -76,7 +76,7 @@ class SecurityConfig(
             "https://we-meet-fe.vercel.app"
         )
         configuration.allowedHeaders = listOf("*")
-        configuration.allowedMethods = listOf("*")
+        configuration.allowedMethods = listOf("POST", "GET", "DELETE", "PUT", "PATCH")
         configuration.allowCredentials = true
 
         val source = UrlBasedCorsConfigurationSource()
