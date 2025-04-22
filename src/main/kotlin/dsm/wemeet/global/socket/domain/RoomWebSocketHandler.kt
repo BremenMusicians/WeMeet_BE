@@ -46,13 +46,18 @@ class RoomWebSocketHandler(
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
-        // 여긴 제대로 처리되지 않고 넘어왔기에 member 관계를 풀어줘야됨
-        leaveRoomUseCase.execute(
-            roomId = getRoomId(session),
-            currentUserEmail = getUserEmail(session)
-        )
+        // 통신 오류가 발생했으므로 도메인 상태를 먼저 정리
+        runCatching {
+            leaveRoomUseCase.execute(
+                roomId = getRoomId(session),
+                currentUserEmail = getUserEmail(session)
+            )
+        }
 
         leaveAndCleanUp(session)
+
+        // 기본 처리(세션 close 등) 수행
+        super.handleTransportError(session, exception)
     }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
