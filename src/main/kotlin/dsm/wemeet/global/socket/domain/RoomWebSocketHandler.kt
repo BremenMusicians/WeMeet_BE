@@ -1,6 +1,7 @@
 package dsm.wemeet.global.socket.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
@@ -16,7 +17,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 @Component
 class RoomWebSocketHandler(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val kickMemberUseCase: KickMemberUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -56,6 +58,21 @@ class RoomWebSocketHandler(
                     peers.find { it.attributes["email"] == targetEmail }
                         ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
+            }
+
+            "kick" -> {
+                val currentEmail = getUserEmail(session)
+
+                try {
+                    kickMemberUseCase.execute(roomId, currentEmail, signal.to!!)
+                } catch (e: Exception) {
+                    return
+                }
+
+                peers.find { it.attributes["email"] == signal.to }
+                    ?.let { peer ->
+                        if (peer.isOpen) peer.close(CloseStatus(4003))
+                    }
             }
         }
     }
