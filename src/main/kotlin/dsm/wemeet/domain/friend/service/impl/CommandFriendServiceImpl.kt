@@ -12,4 +12,7 @@ class CommandFriendServiceImpl(
 
     override fun saveFriend(friend: Friend): Friend =
         friendJpaRepository.save(friend)
+
+    override fun deleteFriend(friend: Friend) =
+        friendJpaRepository.delete(friend)
 }
