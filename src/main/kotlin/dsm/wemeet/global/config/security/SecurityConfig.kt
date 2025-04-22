@@ -71,12 +71,12 @@ class SecurityConfig(
         val configuration = CorsConfiguration()
 
         configuration.allowedOrigins = listOf(
-            "http://localhost:[*]",
-            "http://127.0.0.1:[*]",
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
             "https://we-meet-fe.vercel.app"
         )
-        configuration.addAllowedHeader("*")
-        configuration.addAllowedMethod("*")
+        configuration.allowedHeaders = listOf("*")
+        configuration.allowedMethods = listOf("*")
         configuration.allowCredentials = true
 
         val source = UrlBasedCorsConfigurationSource()
