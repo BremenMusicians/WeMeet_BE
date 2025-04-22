@@ -43,7 +43,6 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.POST, "/mail").permitAll()
                 .requestMatchers(HttpMethod.POST, "/mail/check").permitAll()
                 .requestMatchers(HttpMethod.GET, "/friends").authenticated()
-                .requestMatchers(HttpMethod.GET, "/friends/search").authenticated()
                 .requestMatchers(HttpMethod.POST, "/friends/{friend-id}").authenticated()
                 .requestMatchers(HttpMethod.POST, "/friends/request/{friend-id}").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/friends/request/{friend-id}").authenticated()
