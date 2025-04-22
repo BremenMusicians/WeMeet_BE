@@ -19,13 +19,13 @@ class SocketConfig(
     private val jwtProvider: JwtProvider
 ) : WebSocketConfigurer {
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(chatWebSocketHandler, "/chat")
+        registry.addHandler(chatWebSocketHandler, "/ws/chat")
             .setAllowedOrigins("*")
-        registry.addHandler(roomWebSocketHandler, "/rooms/{roomId}")
+        registry.addHandler(roomWebSocketHandler, "/ws/rooms/*")
             .setAllowedOrigins("*")
             .addInterceptors(
                 AuthorizeInterceptor(jwtProvider),
-                PathParsingInterceptor(UriTemplate("/rooms/{roomId}"))
+                PathParsingInterceptor(UriTemplate("/ws/rooms/{roomId}"))
             )
     }
 }

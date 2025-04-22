@@ -69,7 +69,7 @@ class SecurityConfig(
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web ->
-            web.ignoring().requestMatchers("/chat", "/rooms/**")
+            web.ignoring().requestMatchers("/ws/**")
         }
     }
 
