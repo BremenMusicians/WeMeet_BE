@@ -16,8 +16,9 @@ class LeaveRoomUseCase(
     private val commandRoomService: CommandRoomService
 ) {
 
-    fun execute(roomId: UUID) {
-        val currentUser = queryUserService.getCurrentUser()
+    fun execute(roomId: UUID, currentUserEmail: String?) {
+        val currentUser = currentUserEmail?.let { queryUserService.queryUserByEmail(it) }
+            ?: queryUserService.getCurrentUser()
         val currentRoom = queryRoomService.queryRoomById(roomId)
 
         val member = queryRoomService.queryMemberByUserEmailAndRoomId(

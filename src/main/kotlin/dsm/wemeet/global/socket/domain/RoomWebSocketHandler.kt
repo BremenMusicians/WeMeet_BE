@@ -2,6 +2,7 @@ package dsm.wemeet.global.socket.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
+import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
@@ -18,7 +19,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 @Component
 class RoomWebSocketHandler(
     private val objectMapper: ObjectMapper,
-    private val kickMemberUseCase: KickMemberUseCase
+    private val kickMemberUseCase: KickMemberUseCase,
+    private val leaveRoomUseCase: LeaveRoomUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -43,7 +45,15 @@ class RoomWebSocketHandler(
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
 
-    override fun handleTransportError(session: WebSocketSession, exception: Throwable) = leaveAndCleanUp(session)
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        // 여긴 제대로 처리되지 않고 넘어왔기에 member 관계를 풀어줘야됨
+        leaveRoomUseCase.execute(
+            roomId = getRoomId(session),
+            currentUserEmail = getUserEmail(session)
+        )
+
+        leaveAndCleanUp(session)
+    }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val roomId = getRoomId(session)
