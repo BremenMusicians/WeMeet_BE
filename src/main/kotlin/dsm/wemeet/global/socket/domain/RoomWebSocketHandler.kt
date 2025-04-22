@@ -1,6 +1,8 @@
 package dsm.wemeet.global.socket.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dsm.wemeet.domain.room.usecase.KickMemberUseCase
+import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
@@ -16,7 +18,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 @Component
 class RoomWebSocketHandler(
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val kickMemberUseCase: KickMemberUseCase,
+    private val leaveRoomUseCase: LeaveRoomUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -41,7 +45,20 @@ class RoomWebSocketHandler(
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
 
-    override fun handleTransportError(session: WebSocketSession, exception: Throwable) = leaveAndCleanUp(session)
+    override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
+        // 통신 오류가 발생했으므로 도메인 상태를 먼저 정리
+        runCatching {
+            leaveRoomUseCase.execute(
+                roomId = getRoomId(session),
+                currentUserEmail = getUserEmail(session)
+            )
+        }
+
+        leaveAndCleanUp(session)
+
+        // 기본 처리(세션 close 등) 수행
+        super.handleTransportError(session, exception)
+    }
 
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val roomId = getRoomId(session)
@@ -56,6 +73,20 @@ class RoomWebSocketHandler(
                     peers.find { it.attributes["email"] == targetEmail }
                         ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
+            }
+
+            "kick" -> {
+                val currentEmail = getUserEmail(session)
+
+                try {
+                    kickMemberUseCase.execute(roomId, currentEmail, signal.to!!)
+                } catch (e: Exception) {
+                    return
+                }
+
+                peers.find { it.attributes["email"] == signal.to }
+                    ?.takeIf { it.isOpen }
+                    ?.close(CloseStatus(4003))
             }
         }
     }

@@ -20,7 +20,7 @@ class QueryRoomServiceImpl(
     private val memberJpaRepository: MemberJpaRepository
 ) : QueryRoomService {
 
-    override fun queryRoomListByNameContainsAndOffsetByPage(page: Int, name: String?): List<CurrentRoomVo> {
+    override fun queryRoomListByNameContainsAndOffsetByPage(page: Int, name: String): List<CurrentRoomVo> {
         val pageable: Pageable = PageRequest.of(page, 6)
 
         return roomJpaRepository.findAllRoomDetailsByNamePageable(name, pageable)
@@ -35,6 +35,6 @@ class QueryRoomServiceImpl(
     override fun queryAllMemberByRoomIdOrderByJoinedAt(roomId: UUID): List<Member> =
         memberJpaRepository.findAllByRoomIdOrderByJoinedAt(roomId)
 
-    override fun countByNameContains(name: String?): Int =
+    override fun countByNameContains(name: String): Int =
         roomJpaRepository.countByNameContaining(name).toInt()
 }

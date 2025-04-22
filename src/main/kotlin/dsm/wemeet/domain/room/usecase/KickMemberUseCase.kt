@@ -19,10 +19,10 @@ class KickMemberUseCase(
     private val commandRoomService: CommandRoomService
 ) {
 
-    fun execute(roomId: UUID, accountId: String) {
-        val currentUser = queryUserService.getCurrentUser()
+    fun execute(roomId: UUID, currentUserEmail: String, kickedUserEmail: String) {
         val currentRoom = queryRoomService.queryRoomById(roomId)
-        val kickedUser = queryUserService.queryUserByAccountId(accountId)
+        val currentUser = queryUserService.queryUserByEmail(currentUserEmail)
+        val kickedUser = queryUserService.queryUserByEmail(kickedUserEmail)
 
         check(currentUser, currentRoom, kickedUser)
 

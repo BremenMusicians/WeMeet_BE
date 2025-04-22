@@ -7,7 +7,7 @@ import java.util.UUID
 
 interface QueryRoomService {
 
-    fun queryRoomListByNameContainsAndOffsetByPage(page: Int, name: String?): List<CurrentRoomVo>
+    fun queryRoomListByNameContainsAndOffsetByPage(page: Int, name: String): List<CurrentRoomVo>
 
     fun queryRoomById(id: UUID): Room
 
@@ -15,5 +15,5 @@ interface QueryRoomService {
 
     fun queryAllMemberByRoomIdOrderByJoinedAt(roomId: UUID): List<Member>
 
-    fun countByNameContains(name: String?): Int
+    fun countByNameContains(name: String): Int
 }
