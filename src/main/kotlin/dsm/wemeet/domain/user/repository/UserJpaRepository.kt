@@ -18,8 +18,8 @@ interface UserJpaRepository : JpaRepository<User, String> {
 
     @Query(
         """
-            SELECT u FROM User u WHERE (:accountId IS NULL OR u.accountId LIKE %:accountId%)
-            """
+            SELECT u FROM User u WHERE u.accountId LIKE %:accountId%
+        """
     )
     fun findAllByAccountIdContaining(@Param("accountId") accountId: String?, pageable: Pageable): List<User>
 }

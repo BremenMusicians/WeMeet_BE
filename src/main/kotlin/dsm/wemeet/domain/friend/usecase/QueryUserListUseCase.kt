@@ -1,6 +1,6 @@
 package dsm.wemeet.domain.friend.usecase
 
-import dsm.wemeet.domain.friend.presentation.dto.response.FriendListResponse
+import dsm.wemeet.domain.friend.presentation.dto.response.UserListResponse
 import dsm.wemeet.domain.friend.presentation.dto.response.UserResponse
 import dsm.wemeet.domain.friend.repository.model.IsFriendType
 import dsm.wemeet.domain.friend.service.QueryFriendService
@@ -16,11 +16,11 @@ class QueryUserListUseCase(
     private val queryFriendService: QueryFriendService,
     private val s3Util: S3Util
 ) {
-    fun execute(page: Int, name: String): FriendListResponse {
+    fun execute(page: Int, name: String): UserListResponse {
         val user = queryUserService.getCurrentUser()
         val users = queryUserService.queryUserListByAccountIdContainsAndOffsetByPage(page, name)
 
-        val returnUsers = users.map { it ->
+        val returnUsers = users.map {
             val isFriend = getFriendStatus(user, it)
 
             UserResponse(
@@ -32,13 +32,17 @@ class QueryUserListUseCase(
             )
         }
 
-        val friendsCnt = returnUsers.count()
+        val friendsCnt = returnUsers.size
 
-        return FriendListResponse(users = returnUsers, friendsCnt = friendsCnt)
+        return UserListResponse(users = returnUsers, usersCnt = friendsCnt)
     }
 
     private fun getFriendStatus(user: User, otherUser: User): IsFriendType {
         val friendRequest = queryFriendService.queryFriendRequest(user.email, otherUser.email)
+
+        if (user == otherUser) {
+            return IsFriendType.FRIEND
+        }
 
         return if (friendRequest != null) {
             if (friendRequest.isAccepted) {

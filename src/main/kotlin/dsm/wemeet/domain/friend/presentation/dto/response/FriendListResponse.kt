@@ -3,9 +3,9 @@ package dsm.wemeet.domain.friend.presentation.dto.response
 import dsm.wemeet.domain.friend.repository.model.IsFriendType
 import dsm.wemeet.domain.user.repository.model.Position
 
-data class FriendListResponse(
+data class UserListResponse(
     val users: List<UserResponse>,
-    val friendsCnt: Int
+    val usersCnt: Int
 )
 
 data class UserResponse(

@@ -1,6 +1,6 @@
 package dsm.wemeet.domain.friend.presentation
 
-import dsm.wemeet.domain.friend.presentation.dto.response.FriendListResponse
+import dsm.wemeet.domain.friend.presentation.dto.response.UserListResponse
 import dsm.wemeet.domain.friend.usecase.HandleFriendRequestUseCase
 import dsm.wemeet.domain.friend.usecase.QueryUserListUseCase
 import dsm.wemeet.domain.friend.usecase.RequestFriendUseCase
@@ -36,12 +36,12 @@ class FriendController(
     }
 
     @GetMapping
-    fun queryUserList(
+    fun queryFriendCandidateList(
         @RequestParam(value = "page")
         @Min(0)
         page: Int,
         @RequestParam(value = "name", required = false, defaultValue = "") name: String
-    ): FriendListResponse {
+    ): UserListResponse {
         return queryUserListUseCase.execute(page, name)
     }
 }

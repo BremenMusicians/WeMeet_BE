@@ -19,6 +19,7 @@ class QueryFriendServiceImpl(
     override fun queryFriendById(id: UUID) =
         friendJpaRepository.findByIdOrNull(id) ?: throw FriendNotFoundException
 
-    override fun queryFriendRequest(user1: String, user2: String) =
-        friendJpaRepository.findByAnyEmail(user1, user2)
+    // 두 사용자 간의 친구관계 또는 친구 요청을 조회
+    override fun queryFriendRequest(email1: String, email2: String) =
+        friendJpaRepository.findByAnyEmail(email1, email2)
 }
