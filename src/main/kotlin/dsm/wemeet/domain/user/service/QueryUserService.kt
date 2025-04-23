@@ -10,6 +10,8 @@ interface QueryUserService {
 
     fun queryUserByAccountId(accountId: String): User
 
+    fun queryUserListByAccountIdContainsAndOffsetByPage(page: Int, accountId: String): List<User>
+
     fun existsByEmail(email: String)
 
     fun existsByAccountId(accountId: String)

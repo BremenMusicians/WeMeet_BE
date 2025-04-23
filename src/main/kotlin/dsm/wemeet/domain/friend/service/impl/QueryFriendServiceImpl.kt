@@ -18,4 +18,7 @@ class QueryFriendServiceImpl(
 
     override fun queryFriendById(id: UUID) =
         friendJpaRepository.findByIdOrNull(id) ?: throw FriendNotFoundException
+
+    override fun queryFriendRequest(user1: String, user2: String) =
+        friendJpaRepository.findByAnyEmail(user1, user2)
 }
