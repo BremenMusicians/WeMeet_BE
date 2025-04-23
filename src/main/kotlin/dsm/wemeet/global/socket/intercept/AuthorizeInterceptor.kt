@@ -28,7 +28,7 @@ class AuthorizeInterceptor(
         }
 
         return try {
-            val mail = attributes["email"] as String
+            val mail = jwtProvider.getJws(token).body.subject
             attributes["email"] = mail
             attributes["accountId"] = queryUserService.queryUserByEmail(mail).accountId
             true
