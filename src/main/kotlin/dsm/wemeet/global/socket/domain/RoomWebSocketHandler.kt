@@ -12,6 +12,7 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
+import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap
@@ -123,6 +124,9 @@ class RoomWebSocketHandler(
     private fun getAccountId(session: WebSocketSession): String =
         session.attributes["accountId"]!!.toString()
 
+    private fun getProfile(session: WebSocketSession): String? =
+        (session.attributes["profile"]!! as Optional<String>).orElse(null)
+
     private fun createMsg(type: String, payload: String): JSONObject =
         JSONObject()
             .put("type", type)
@@ -130,6 +134,7 @@ class RoomWebSocketHandler(
 
     private fun WebSocketSession.toPeer() = Peer(
         getUserEmail(this),
-        getAccountId(this)
+        getAccountId(this),
+        getProfile(this)
     )
 }
