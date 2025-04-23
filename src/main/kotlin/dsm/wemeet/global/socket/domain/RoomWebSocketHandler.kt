@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
+import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
 import org.springframework.stereotype.Component
@@ -31,13 +32,13 @@ class RoomWebSocketHandler(
         val peers = roomPeers.computeIfAbsent(roomId) { CopyOnWriteArrayList() }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
-        val joinMsg = createMsg("join", userEmail)
+        val joinMsg = createMsg("join", objectMapper.writeValueAsString(session.toPeer()))
         peers.forEach { peer ->
             if (peer.isOpen) peer.sendMessage(TextMessage(joinMsg.toString()))
         }
 
         // 신규 피어에게 기존 멤버 정보 발송
-        val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.attributes["email"] as String }))
+        val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.toPeer() }))
         session.sendMessage(TextMessage(existsPeerMsg.toString()))
 
         peers += session
@@ -99,7 +100,7 @@ class RoomWebSocketHandler(
             list.remove(session)
 
             // 남은 멤버에게 퇴장 발송
-            val leaveMsg = createMsg("leave", userEmail)
+            val leaveMsg = createMsg("leave", objectMapper.writeValueAsString(session.toPeer()))
             list.forEach { peer ->
                 if (peer.isOpen) peer.sendMessage(TextMessage(leaveMsg.toString()))
             }
@@ -119,8 +120,16 @@ class RoomWebSocketHandler(
     private fun getUserEmail(session: WebSocketSession): String =
         session.attributes["email"]!!.toString()
 
+    private fun getAccountId(session: WebSocketSession): String =
+        session.attributes["accountId"]!!.toString()
+
     private fun createMsg(type: String, payload: String): JSONObject =
         JSONObject()
             .put("type", type)
             .put("payload", payload)
+
+    private fun WebSocketSession.toPeer() = Peer(
+        getUserEmail(this),
+        getAccountId(this)
+    )
 }

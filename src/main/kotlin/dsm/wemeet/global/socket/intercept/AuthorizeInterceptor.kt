@@ -1,5 +1,6 @@
 package dsm.wemeet.global.socket.intercept
 
+import dsm.wemeet.domain.user.service.QueryUserService
 import dsm.wemeet.global.jwt.JwtProvider
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.ServerHttpRequest
@@ -10,7 +11,8 @@ import org.springframework.web.util.UriComponentsBuilder
 import java.lang.Exception
 
 class AuthorizeInterceptor(
-    private val jwtProvider: JwtProvider
+    private val jwtProvider: JwtProvider,
+    private val queryUserService: QueryUserService
 ) : HandshakeInterceptor {
     override fun beforeHandshake(
         request: ServerHttpRequest,
@@ -26,7 +28,9 @@ class AuthorizeInterceptor(
         }
 
         return try {
-            attributes["email"] = jwtProvider.getJws(token).body.subject
+            val mail = attributes["email"] as String
+            attributes["email"] = mail
+            attributes["accountId"] = queryUserService.queryUserByEmail(mail).accountId
             true
         } catch (e: Exception) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED)
