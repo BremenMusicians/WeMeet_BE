@@ -28,7 +28,6 @@ class RoomWebSocketHandler(
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        val userEmail = getUserEmail(session)
         val roomId = getRoomId(session)
         val peers = roomPeers.computeIfAbsent(roomId) { CopyOnWriteArrayList() }
 
@@ -94,7 +93,6 @@ class RoomWebSocketHandler(
     }
 
     private fun leaveAndCleanUp(session: WebSocketSession) {
-        val userEmail = getUserEmail(session)
         val roomId = getRoomId(session)
 
         roomPeers[roomId]?.let { list ->
