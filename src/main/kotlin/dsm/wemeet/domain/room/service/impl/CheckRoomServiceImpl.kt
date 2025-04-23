@@ -1,6 +1,7 @@
 package dsm.wemeet.domain.room.service.impl
 
 import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
+import dsm.wemeet.domain.room.exception.RoomIsFullException
 import dsm.wemeet.domain.room.repository.MemberJpaRepository
 import dsm.wemeet.domain.room.repository.model.Room
 import dsm.wemeet.domain.room.service.CheckRoomService
@@ -15,6 +16,12 @@ class CheckRoomServiceImpl(
     override fun validateUserNotAlreadyInRoom(user: User, room: Room) {
         if (memberJpaRepository.existsMemberByUserAndRoom(user, room)) {
             throw AlreadyJoinedRoomException
+        }
+    }
+
+    override fun validateRoomIsNotFull(room: Room) {
+        if (memberJpaRepository.countMemberByRoomId(room.id!!) >= room.maxMember) {
+            throw RoomIsFullException
         }
     }
 }

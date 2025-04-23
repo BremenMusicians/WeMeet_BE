@@ -13,4 +13,6 @@ interface MemberJpaRepository : JpaRepository<Member, UUID> {
     fun findAllByRoomIdOrderByJoinedAt(roomId: UUID): List<Member>
 
     fun existsMemberByUserAndRoom(user: User, room: Room): Boolean
+
+    fun countMemberByRoomId(roomId: UUID): Long
 }

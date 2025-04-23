@@ -23,6 +23,7 @@ class JoinRoomUseCase(
         val currentUser = queryUserService.getCurrentUser()
 
         checkRoomService.validateUserNotAlreadyInRoom(currentUser, currentRoom)
+        checkRoomService.validateRoomIsNotFull(currentRoom)
 
         commandRoomService.saveMember(
             Member(
