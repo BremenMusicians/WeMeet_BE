@@ -19,7 +19,7 @@ class QueryMyFriendListUseCase(
     fun execute(name: String): UserListResponse {
         val currentUser = queryUserService.getCurrentUser()
 
-        val users = queryFriendService.queryFriendUserListByEmailContainsAccountId(currentUser.email, name)
+        val users = queryFriendService.queryFriendUserListByEmailAndContainsAccountId(currentUser.email, name)
 
         return users
             .map { user ->
