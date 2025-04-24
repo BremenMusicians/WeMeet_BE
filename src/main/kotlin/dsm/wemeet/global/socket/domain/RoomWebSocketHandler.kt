@@ -1,6 +1,8 @@
 package dsm.wemeet.global.socket.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
+import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
@@ -22,7 +24,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 class RoomWebSocketHandler(
     private val objectMapper: ObjectMapper,
     private val kickMemberUseCase: KickMemberUseCase,
-    private val leaveRoomUseCase: LeaveRoomUseCase
+    private val leaveRoomUseCase: LeaveRoomUseCase,
+    private val checkIsMemberUseCase: CheckIsMemberUseCase
+
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -30,6 +34,16 @@ class RoomWebSocketHandler(
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val roomId = getRoomId(session)
         val peers = roomPeers.computeIfAbsent(roomId) { CopyOnWriteArrayList() }
+
+        try {
+            // 멤버가 이 방에 포함되고 있는지 확인
+            checkIsMemberUseCase.execute(roomId, getUserEmail(session))
+
+            // 이미 세션에 들어와있는지
+            peers.find { getUserEmail(it) == getUserEmail(session) }.let { throw AlreadyJoinedRoomException }
+        } catch (e: Exception) {
+            session.close(CloseStatus.POLICY_VIOLATION)
+        }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
         val joinMsg = createMsg("join", objectMapper.writeValueAsString(session.toPeer()))
@@ -64,9 +78,10 @@ class RoomWebSocketHandler(
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val roomId = getRoomId(session)
         val peers = roomPeers[roomId] ?: return
+        println("오케이 메시지 받았으")
 
         val signal = objectMapper.readValue(message.payload, Signal::class.java)
-
+        println("메시지도 잘 받았으 $signal")
         when (signal.type) {
             // WebRTC 연결 정보 관련 타입
             "offer", "answer", "candidate" -> {
@@ -79,15 +94,20 @@ class RoomWebSocketHandler(
             "kick" -> {
                 val currentEmail = getUserEmail(session)
 
+                println("kick 메시지 받았으")
+
                 try {
                     kickMemberUseCase.execute(roomId, currentEmail, signal.to!!)
                 } catch (e: Exception) {
                     return
                 }
 
+                println("강퇴 데이터 요청 잘 처리했으")
+
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.close(CloseStatus(4003))
+                    ?.close(CloseStatus(4003)) ?: println("뭐야 없는데?")
+                println("잘 나가졌으")
             }
         }
     }

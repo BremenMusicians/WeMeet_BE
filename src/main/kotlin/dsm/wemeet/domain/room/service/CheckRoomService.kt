@@ -8,4 +8,6 @@ interface CheckRoomService {
     fun validateUserNotAlreadyInRoom(user: User, room: Room)
 
     fun validateRoomIsNotFull(room: Room)
+
+    fun validateUserIsInRoom(user: User, room: Room)
 }
