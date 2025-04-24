@@ -16,10 +16,10 @@ class QueryMyFriendListUseCase(
     private val s3Util: S3Util
 ) {
 
-    fun execute(name: String): UserListResponse {
+    fun execute(page: Int, name: String): UserListResponse {
         val currentUser = queryUserService.getCurrentUser()
 
-        val users = queryFriendService.queryFriendUserListByEmailAndContainsAccountId(currentUser.email, name)
+        val users = queryFriendService.queryFriendUserListByEmailAndContainsAccountIdOffsetByPage(currentUser.email, name, page)
 
         return users
             .map { user ->

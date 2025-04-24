@@ -5,6 +5,8 @@ import dsm.wemeet.domain.friend.repository.FriendJpaRepository
 import dsm.wemeet.domain.friend.repository.model.Friend
 import dsm.wemeet.domain.friend.service.QueryFriendService
 import dsm.wemeet.domain.user.repository.model.User
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.UUID
@@ -24,7 +26,9 @@ class QueryFriendServiceImpl(
     override fun queryNullableFriendRequestByEmails(email1: String, email2: String) =
         friendJpaRepository.findByAnyEmail(email1, email2)
 
-    override fun queryFriendUserListByEmailAndContainsAccountId(email: String, accountId: String): List<User> {
-        friendJpaRepository.findFriendUsersByEmailAndContainsAccountId(email, accountId)
+    override fun queryFriendUserListByEmailAndContainsAccountIdOffsetByPage(email: String, accountId: String, page: Int): List<User> {
+        val pageable: Pageable = PageRequest.of(page, 10)
+
+        return friendJpaRepository.findFriendUsersByEmailAndContainsAccountIdOffsetByPage(email, accountId, pageable)
     }
 }

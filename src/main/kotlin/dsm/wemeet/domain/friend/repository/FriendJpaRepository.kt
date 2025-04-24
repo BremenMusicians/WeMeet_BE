@@ -2,6 +2,7 @@ package dsm.wemeet.domain.friend.repository
 
 import dsm.wemeet.domain.friend.repository.model.Friend
 import dsm.wemeet.domain.user.repository.model.User
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -44,5 +45,5 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
             END LIKE CONCAT('%', :accountId, '%')
         """
     )
-    fun findFriendUsersByEmailAndContainsAccountId(@Param("email") email: String, @Param("accountId") accountId: String): List<User>
+    fun findFriendUsersByEmailAndContainsAccountIdOffsetByPage(@Param("email") email: String, @Param("accountId") accountId: String, pageable: Pageable): List<User>
 }

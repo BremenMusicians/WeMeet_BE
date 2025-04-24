@@ -49,8 +49,11 @@ class FriendController(
 
     @GetMapping("/my")
     fun getMyFriendList(
+        @RequestParam(value = "page")
+        @Min(0)
+        page: Int,
         @RequestParam(value = "name", required = false, defaultValue = "") name: String
     ): UserListResponse {
-        return queryMyFriendListUseCase.execute(name)
+        return queryMyFriendListUseCase.execute(page, name)
     }
 }
