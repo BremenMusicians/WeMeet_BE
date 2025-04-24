@@ -38,7 +38,7 @@ class QueryUserListUseCase(
     }
 
     private fun getFriendStatus(user: User, otherUser: User): IsFriendType {
-        val friendRequest = queryFriendService.queryFriendRequest(user.email, otherUser.email)
+        val friendRequest = queryFriendService.queryNullableFriendRequestByEmails(user.email, otherUser.email)
 
         if (user == otherUser) {
             return IsFriendType.FRIEND

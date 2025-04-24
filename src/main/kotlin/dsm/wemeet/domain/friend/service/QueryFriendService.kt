@@ -9,5 +9,5 @@ interface QueryFriendService {
 
     fun queryFriendById(id: UUID): Friend
 
-    fun queryFriendRequest(email1: String, email2: String): Friend?
+    fun queryNullableFriendRequestByEmails(email1: String, email2: String): Friend?
 }
