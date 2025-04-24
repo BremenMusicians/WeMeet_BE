@@ -24,7 +24,7 @@ class QueryFriendServiceImpl(
     override fun queryNullableFriendRequestByEmails(email1: String, email2: String) =
         friendJpaRepository.findByAnyEmail(email1, email2)
 
-    override fun queryFriendUserListByEmailContainsAccountId(email: String, accountId: String): List<User> {
-        friendJpaRepository.findFriendUsersByEmailContainsAccountId(email, accountId)
+    override fun queryFriendUserListByEmailAndContainsAccountId(email: String, accountId: String): List<User> {
+        friendJpaRepository.findFriendUsersByEmailAndContainsAccountId(email, accountId)
     }
 }

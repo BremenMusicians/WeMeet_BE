@@ -12,5 +12,5 @@ interface QueryFriendService {
 
     fun queryNullableFriendRequestByEmails(email1: String, email2: String): Friend?
 
-    fun queryFriendUserListByEmailContainsAccountId(email: String, accountId: String): List<User>
+    fun queryFriendUserListByEmailAndContainsAccountId(email: String, accountId: String): List<User>
 }
