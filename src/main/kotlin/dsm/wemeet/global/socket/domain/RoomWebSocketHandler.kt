@@ -26,7 +26,6 @@ class RoomWebSocketHandler(
     private val kickMemberUseCase: KickMemberUseCase,
     private val leaveRoomUseCase: LeaveRoomUseCase,
     private val checkIsMemberUseCase: CheckIsMemberUseCase
-
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
