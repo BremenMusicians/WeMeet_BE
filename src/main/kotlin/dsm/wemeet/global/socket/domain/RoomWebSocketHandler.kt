@@ -39,7 +39,7 @@ class RoomWebSocketHandler(
             checkIsMemberUseCase.execute(roomId, getUserEmail(session))
 
             // 이미 세션에 들어와있는지
-            peers.find { getUserEmail(it) == getUserEmail(session) }.let { throw AlreadyJoinedRoomException }
+            peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
         } catch (e: Exception) {
             session.close(CloseStatus.POLICY_VIOLATION)
         }
