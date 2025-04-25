@@ -12,7 +12,7 @@ interface QueryFriendService {
 
     fun queryNullableFriendRequestByEmails(email1: String, email2: String): Friend?
 
-    fun queryFriendUserListByEmailAndContainsAccountIdOffsetByPage(email: String, accountId: String, page: Int): List<User>
+    fun queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(email: String, accountId: String, page: Int): List<User>
 
-    fun countFriendsByEmailAndContainsAccountId(email: String, accountId: String): Long
+    fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String): Long
 }

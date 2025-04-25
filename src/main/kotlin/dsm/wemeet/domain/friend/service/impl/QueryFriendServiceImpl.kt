@@ -26,12 +26,12 @@ class QueryFriendServiceImpl(
     override fun queryNullableFriendRequestByEmails(email1: String, email2: String) =
         friendJpaRepository.findByAnyEmail(email1, email2)
 
-    override fun queryFriendUserListByEmailAndContainsAccountIdOffsetByPage(email: String, accountId: String, page: Int): List<User> {
+    override fun queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(email: String, accountId: String, page: Int): List<User> {
         val pageable: Pageable = PageRequest.of(page, 10)
 
-        return friendJpaRepository.findFriendUsersByEmailAndContainsAccountIdOffsetByPage(email, accountId, pageable)
+        return friendJpaRepository.findFriendUsersByEmailAndAccountIdContainsOffsetByPage(email, accountId, pageable)
     }
 
-    override fun countFriendsByEmailAndContainsAccountId(email: String, accountId: String) =
-        friendJpaRepository.countFriendsByEmaiAndContainsAccountId(email, accountId)
+    override fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String) =
+        friendJpaRepository.countFriendsByEmaiAndAccountIdContains(email, accountId)
 }

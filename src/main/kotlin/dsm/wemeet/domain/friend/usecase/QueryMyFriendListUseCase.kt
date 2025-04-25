@@ -19,8 +19,8 @@ class QueryMyFriendListUseCase(
     fun execute(page: Int, name: String): UserListResponse {
         val currentUser = queryUserService.getCurrentUser()
 
-        val users = queryFriendService.queryFriendUserListByEmailAndContainsAccountIdOffsetByPage(currentUser.email, name, page)
-        val cnt = queryFriendService.countFriendsByEmailAndContainsAccountId(currentUser.email, name).toInt()
+        val users = queryFriendService.queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(currentUser.email, name, page)
+        val cnt = queryFriendService.countFriendsByEmailAndAccountIdContains(currentUser.email, name).toInt()
 
         return UserListResponse(
             users = users.map {

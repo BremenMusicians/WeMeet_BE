@@ -45,7 +45,7 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
             END LIKE CONCAT('%', :accountId, '%')
         """
     )
-    fun findFriendUsersByEmailAndContainsAccountIdOffsetByPage(@Param("email") email: String, @Param("accountId") accountId: String, pageable: Pageable): List<User>
+    fun findFriendUsersByEmailAndAccountIdContainsOffsetByPage(@Param("email") email: String, @Param("accountId") accountId: String, pageable: Pageable): List<User>
 
     @Query(
         """
@@ -59,5 +59,5 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
             END LIKE CONCAT('%', :accountId, '%')
         """
     )
-    fun countFriendsByEmaiAndContainsAccountId(@Param("email") email: String, @Param("accountId") accountId: String): Long
+    fun countFriendsByEmaiAndAccountIdContains(@Param("email") email: String, @Param("accountId") accountId: String): Long
 }
