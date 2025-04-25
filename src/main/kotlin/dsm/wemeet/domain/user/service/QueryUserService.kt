@@ -12,6 +12,8 @@ interface QueryUserService {
 
     fun queryUserListByAccountIdContainsAndOffsetByPage(page: Int, accountId: String): List<User>
 
+    fun countUsersByAccountIdContains(accountId: String): Long
+
     fun existsByEmail(email: String)
 
     fun existsByAccountId(accountId: String)

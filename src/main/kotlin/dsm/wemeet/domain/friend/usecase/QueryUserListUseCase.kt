@@ -19,6 +19,7 @@ class QueryUserListUseCase(
     fun execute(page: Int, name: String): UserListResponse {
         val user = queryUserService.getCurrentUser()
         val users = queryUserService.queryUserListByAccountIdContainsAndOffsetByPage(page, name)
+        val cnt = queryUserService.countUsersByAccountIdContains(name).toInt()
 
         val returnUsers = users.map {
             val isFriend = getFriendStatus(user, it)
@@ -32,9 +33,7 @@ class QueryUserListUseCase(
             )
         }
 
-        val friendsCnt = returnUsers.size
-
-        return UserListResponse(users = returnUsers, usersCnt = friendsCnt)
+        return UserListResponse(users = returnUsers, usersCnt = cnt)
     }
 
     private fun getFriendStatus(user: User, otherUser: User): IsFriendType {

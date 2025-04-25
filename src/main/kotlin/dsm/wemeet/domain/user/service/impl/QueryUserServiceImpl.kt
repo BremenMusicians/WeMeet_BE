@@ -31,6 +31,9 @@ class QueryUserServiceImpl(
         return userJpaRepository.findAllByAccountIdContaining(accountId, pageable)
     }
 
+    override fun countUsersByAccountIdContains(accountId: String) =
+        userJpaRepository.countByAccountIdContainsIgnoreCase(accountId)
+
     override fun existsByEmail(email: String) =
         checkExists(userJpaRepository.existsByEmail(email))
 

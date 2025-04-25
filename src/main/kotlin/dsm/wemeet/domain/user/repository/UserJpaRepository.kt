@@ -22,4 +22,6 @@ interface UserJpaRepository : JpaRepository<User, String> {
         """
     )
     fun findAllByAccountIdContaining(@Param("accountId") accountId: String?, pageable: Pageable): List<User>
+
+    fun countByAccountIdContainsIgnoreCase(accountId: String): Long
 }
