@@ -28,9 +28,6 @@ class S3Util(
     @Value("\${cloud.aws.s3.bucket}")
     lateinit var bucketName: String
 
-    @Value("\${cloud.aws.s3.exp-time}")
-    lateinit var s3Exp: String
-
     fun upload(file: MultipartFile): String {
         val name = UUID.randomUUID()
         val ext = verificationFile(file)
@@ -82,8 +79,6 @@ class S3Util(
     }
 
     fun generateUrl(fileName: String): String {
-        val exp = Duration.ofSeconds(s3Exp.toLong())
-
         val imgRequest = GetObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
@@ -91,7 +86,7 @@ class S3Util(
 
         val freshUrl = s3Presigner.presignGetObject { builder ->
             builder.getObjectRequest(imgRequest)
-                .signatureDuration(exp)
+                .signatureDuration(Duration.ofHours(1))
         }
 
         return freshUrl.url().toString()
