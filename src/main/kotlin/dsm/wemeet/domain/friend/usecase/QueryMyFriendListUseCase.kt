@@ -22,16 +22,18 @@ class QueryMyFriendListUseCase(
         val users = queryFriendService.queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(currentUser.email, name, page)
         val cnt = queryFriendService.countFriendsByEmailAndAccountIdContains(currentUser.email, name).toInt()
 
+        val userResponse = users.map {
+            UserResponse(
+                accountId = it.accountId,
+                profile = it.profile?.let(s3Util::generateUrl),
+                aboutMe = it.aboutMe,
+                position = it.position.split(",").map(Position::valueOf),
+                isFriend = IsFriendType.FRIEND
+            )
+        }
+
         return UserListResponse(
-            users = users.map {
-                UserResponse(
-                    accountId = it.accountId,
-                    profile = it.profile?.let(s3Util::generateUrl),
-                    aboutMe = it.aboutMe,
-                    position = it.position.split(",").map(Position::valueOf),
-                    isFriend = IsFriendType.FRIEND
-                )
-            },
+            users = userResponse,
             usersCnt = cnt
         )
     }
