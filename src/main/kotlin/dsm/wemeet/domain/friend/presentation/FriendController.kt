@@ -1,8 +1,10 @@
 package dsm.wemeet.domain.friend.presentation
 
+import dsm.wemeet.domain.friend.presentation.dto.response.FriendRequestListResponse
 import dsm.wemeet.domain.friend.presentation.dto.response.UserListResponse
 import dsm.wemeet.domain.friend.usecase.HandleFriendRequestUseCase
 import dsm.wemeet.domain.friend.usecase.QueryMyFriendListUseCase
+import dsm.wemeet.domain.friend.usecase.QueryMyFriendRequestListUseCase
 import dsm.wemeet.domain.friend.usecase.QueryUserListUseCase
 import dsm.wemeet.domain.friend.usecase.RequestFriendUseCase
 import jakarta.validation.constraints.Min
@@ -23,7 +25,8 @@ class FriendController(
     private val requestFriendUseCase: RequestFriendUseCase,
     private val handleFriendRequestUseCase: HandleFriendRequestUseCase,
     private val queryUserListUseCase: QueryUserListUseCase,
-    private val queryMyFriendListUseCase: QueryMyFriendListUseCase
+    private val queryMyFriendListUseCase: QueryMyFriendListUseCase,
+    private val queryMyFriendRequestListUseCase: QueryMyFriendRequestListUseCase
 ) {
 
     @ResponseStatus(HttpStatus.OK)
@@ -55,5 +58,10 @@ class FriendController(
         @RequestParam(value = "name", required = false, defaultValue = "") name: String
     ): UserListResponse {
         return queryMyFriendListUseCase.execute(page, name)
+    }
+
+    @GetMapping("/request")
+    fun getRequestFriendList(): FriendRequestListResponse {
+        return queryMyFriendRequestListUseCase.execute()
     }
 }

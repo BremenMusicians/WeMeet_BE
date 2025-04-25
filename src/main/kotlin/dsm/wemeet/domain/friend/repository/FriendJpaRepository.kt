@@ -24,11 +24,11 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
         """
         SELECT f 
         FROM Friend f 
-        WHERE (f.proposer.email = :user OR f.receiver.email = :user)
-        AND f.isAccepted = true
+        WHERE (f.proposer.email = :email OR f.receiver.email = :email)
+        AND f.isAccepted = :isAccepted
     """
     )
-    fun findAcceptedFriendsByUser(@Param("user") user: String): List<Friend>
+    fun findFriendsByEmailAndAcceptanceStatus(@Param("email") email: String, @Param("isAccepted") isAccepted: Boolean): List<Friend>
 
     @Query(
         """

@@ -16,8 +16,8 @@ class QueryFriendServiceImpl(
     private val friendJpaRepository: FriendJpaRepository
 ) : QueryFriendService {
 
-    override fun queryAcceptedFriendsByUser(userId: String): List<Friend> =
-        friendJpaRepository.findAcceptedFriendsByUser(userId)
+    override fun queryFriendsByEmailAndAcceptance(email: String, isAccepted: Boolean): List<Friend> =
+        friendJpaRepository.findFriendsByEmailAndAcceptanceStatus(email, isAccepted)
 
     override fun queryFriendById(id: UUID) =
         friendJpaRepository.findByIdOrNull(id) ?: throw FriendNotFoundException
