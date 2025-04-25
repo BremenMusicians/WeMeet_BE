@@ -46,4 +46,18 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
         """
     )
     fun findFriendUsersByEmailAndContainsAccountIdOffsetByPage(@Param("email") email: String, @Param("accountId") accountId: String, pageable: Pageable): List<User>
+
+    @Query(
+        """
+            SELECT COUNT(f)
+            FROM Friend f
+            WHERE (f.receiver.email = :email OR f.proposer.email = :email)
+                AND f.isAccepted = TRUE
+                AND CASE WHEN f.proposer.email = :email
+                THEN f.receiver.accountId
+                ELSE f.proposer.accountId
+            END LIKE CONCAT('%', :accountId, '%')
+        """
+    )
+    fun countFriendsByEmaiAndContainsAccountId(@Param("email") email: String, @Param("accountId") accountId: String): Long
 }

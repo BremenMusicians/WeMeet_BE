@@ -31,4 +31,7 @@ class QueryFriendServiceImpl(
 
         return friendJpaRepository.findFriendUsersByEmailAndContainsAccountIdOffsetByPage(email, accountId, pageable)
     }
+
+    override fun countFriendsByEmailAndContainsAccountId(email: String, accountId: String) =
+        friendJpaRepository.countFriendsByEmaiAndContainsAccountId(email, accountId)
 }
