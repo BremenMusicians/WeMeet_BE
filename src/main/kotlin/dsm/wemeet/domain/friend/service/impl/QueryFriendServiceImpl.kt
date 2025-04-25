@@ -33,5 +33,5 @@ class QueryFriendServiceImpl(
     }
 
     override fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String) =
-        friendJpaRepository.countFriendsByEmaiAndAccountIdContains(email, accountId)
+        friendJpaRepository.countFriendsByEmailAndAccountIdContains(email, accountId)
 }
