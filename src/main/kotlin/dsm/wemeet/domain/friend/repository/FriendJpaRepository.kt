@@ -28,7 +28,7 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
         AND f.isAccepted = :isAccepted
     """
     )
-    fun findFriendsByEmailAndAcceptanceStatus(@Param("email") email: String, @Param("isAccepted") isAccepted: Boolean): List<Friend>
+    fun findFriendsByEmailAndIsAccepted(@Param("email") email: String, @Param("isAccepted") isAccepted: Boolean): List<Friend>
 
     @Query(
         """

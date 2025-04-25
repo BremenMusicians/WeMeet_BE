@@ -6,7 +6,7 @@ import java.util.UUID
 
 interface QueryFriendService {
 
-    fun queryFriendsByEmailAndAcceptance(email: String, isAccepted: Boolean): List<Friend>
+    fun queryFriendsByEmailAndIsAccepted(email: String, isAccepted: Boolean): List<Friend>
 
     fun queryFriendById(id: UUID): Friend
 

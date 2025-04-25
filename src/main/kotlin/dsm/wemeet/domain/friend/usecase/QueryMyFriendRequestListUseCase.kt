@@ -19,7 +19,7 @@ class QueryMyFriendRequestListUseCase(
 
     fun execute(): FriendRequestListResponse {
         val user = queryUserService.getCurrentUser()
-        val friendRequests = queryFriendService.queryFriendsByEmailAndAcceptance(user.email, false)
+        val friendRequests = queryFriendService.queryFriendsByEmailAndIsAccepted(user.email, false)
         val cnt = friendRequests.size
 
         val friendRequestsResponses = friendRequests.map {
