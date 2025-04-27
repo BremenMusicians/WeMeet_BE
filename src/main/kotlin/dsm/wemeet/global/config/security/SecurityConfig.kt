@@ -48,6 +48,7 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.PATCH, "/friends/request/{friend-id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/friends/my").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/friends/{friend-id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/friends/request").authenticated()
                 .requestMatchers(HttpMethod.POST, "/rooms").authenticated()
                 .requestMatchers(HttpMethod.POST, "/rooms/{room-id}").authenticated()
                 .requestMatchers(HttpMethod.GET, "/rooms").authenticated()
