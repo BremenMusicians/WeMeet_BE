@@ -24,7 +24,7 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
         """
         SELECT f 
         FROM Friend f 
-        WHERE (f.proposer.email = :email OR f.receiver.email = :email)
+        WHERE f.receiver.email = :email
         AND f.isAccepted = :isAccepted
     """
     )
