@@ -1,6 +1,7 @@
 package dsm.wemeet.domain.friend.service.impl
 
 import dsm.wemeet.domain.friend.exception.FriendNotFoundException
+import dsm.wemeet.domain.friend.exception.UnrelatedFriendRequestException
 import dsm.wemeet.domain.friend.repository.FriendJpaRepository
 import dsm.wemeet.domain.friend.repository.model.Friend
 import dsm.wemeet.domain.friend.service.QueryFriendService
@@ -31,6 +32,11 @@ class QueryFriendServiceImpl(
 
         return friendJpaRepository.findFriendUsersByEmailAndAccountIdContainsOffsetByPage(email, accountId, pageable)
     }
+
+    override fun queryAcceptedFriendByEmails(email1: String, email2: String): Friend =
+        friendJpaRepository.findByAnyEmail(email1, email2)
+            ?.let { if (!it.isAccepted) throw UnrelatedFriendRequestException else it }
+            ?: throw FriendNotFoundException
 
     override fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String) =
         friendJpaRepository.countFriendsByEmailAndAccountIdContains(email, accountId)

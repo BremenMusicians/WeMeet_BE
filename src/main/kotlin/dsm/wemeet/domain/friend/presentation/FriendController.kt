@@ -1,12 +1,14 @@
 package dsm.wemeet.domain.friend.presentation
 
 import dsm.wemeet.domain.friend.presentation.dto.response.UserListResponse
+import dsm.wemeet.domain.friend.usecase.DeleteFriendUseCase
 import dsm.wemeet.domain.friend.usecase.HandleFriendRequestUseCase
 import dsm.wemeet.domain.friend.usecase.QueryMyFriendListUseCase
 import dsm.wemeet.domain.friend.usecase.QueryUserListUseCase
 import dsm.wemeet.domain.friend.usecase.RequestFriendUseCase
 import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,7 +25,8 @@ class FriendController(
     private val requestFriendUseCase: RequestFriendUseCase,
     private val handleFriendRequestUseCase: HandleFriendRequestUseCase,
     private val queryUserListUseCase: QueryUserListUseCase,
-    private val queryMyFriendListUseCase: QueryMyFriendListUseCase
+    private val queryMyFriendListUseCase: QueryMyFriendListUseCase,
+    private val deleteFriendUseCase: DeleteFriendUseCase
 ) {
 
     @ResponseStatus(HttpStatus.OK)
@@ -55,5 +58,12 @@ class FriendController(
         @RequestParam(value = "name", required = false, defaultValue = "") name: String
     ): UserListResponse {
         return queryMyFriendListUseCase.execute(page, name)
+    }
+
+    @DeleteMapping("/{account-id}")
+    fun delteFriend(
+        @PathVariable("account-id") accountId: String
+    ) {
+        deleteFriendUseCase.execute(accountId)
     }
 }
