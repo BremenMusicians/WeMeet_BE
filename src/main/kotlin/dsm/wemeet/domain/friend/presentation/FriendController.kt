@@ -60,8 +60,9 @@ class FriendController(
         return queryMyFriendListUseCase.execute(page, name)
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{account-id}")
-    fun delteFriend(
+    fun deleteFriend(
         @PathVariable("account-id") accountId: String
     ) {
         deleteFriendUseCase.execute(accountId)
