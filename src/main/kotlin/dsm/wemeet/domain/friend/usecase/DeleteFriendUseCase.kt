@@ -1,6 +1,5 @@
 package dsm.wemeet.domain.friend.usecase
 
-import dsm.wemeet.domain.friend.exception.IsNotFriendException
 import dsm.wemeet.domain.friend.service.CommandFriendService
 import dsm.wemeet.domain.friend.service.QueryFriendService
 import dsm.wemeet.domain.user.service.QueryUserService
@@ -20,8 +19,6 @@ class DeleteFriendUseCase(
         val deletedFriendUser = queryUserService.queryUserByAccountId(friendAccountId)
 
         val currentFriend = queryFriendService.queryAcceptedFriendByEmails(currentUser.email, deletedFriendUser.email)
-
-        if (!currentFriend.isAccepted) throw IsNotFriendException
 
         commandFriendService.deleteFriend(currentFriend)
     }
