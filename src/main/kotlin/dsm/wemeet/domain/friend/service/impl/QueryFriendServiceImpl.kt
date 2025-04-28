@@ -35,7 +35,7 @@ class QueryFriendServiceImpl(
 
     override fun queryAcceptedFriendByEmails(email1: String, email2: String): Friend =
         friendJpaRepository.findByAnyEmail(email1, email2)
-            ?.let { if (!it.isAccepted) throw UnrelatedFriendRequestException else it }
+            ?.also { if (!it.isAccepted) throw UnrelatedFriendRequestException }
             ?: throw FriendNotFoundException
 
     override fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String) =
