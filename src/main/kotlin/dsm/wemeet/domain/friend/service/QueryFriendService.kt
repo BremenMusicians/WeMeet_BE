@@ -14,5 +14,7 @@ interface QueryFriendService {
 
     fun queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(email: String, accountId: String, page: Int): List<User>
 
+    fun queryAcceptedFriendByEmails(email1: String, email2: String): Friend
+
     fun countFriendsByEmailAndAccountIdContains(email: String, accountId: String): Long
 }
