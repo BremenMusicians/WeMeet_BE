@@ -31,19 +31,29 @@ interface FriendJpaRepository : JpaRepository<Friend, UUID> {
     fun findFriendsByEmailAndIsAccepted(@Param("email") email: String, @Param("isAccepted") isAccepted: Boolean): List<Friend>
 
     @Query(
-        """
-            SELECT CASE WHEN f.proposer.email = :email
-                THEN f.receiver
-                ELSE f.proposer
-            END
-            FROM Friend f
-            WHERE (f.receiver.email = :email OR f.proposer.email = :email)
-                AND f.isAccepted = TRUE
-                AND CASE WHEN f.proposer.email = :email
-                THEN f.receiver.accountId
-                ELSE f.proposer.accountId
-            END LIKE CONCAT('%', :accountId, '%')
-        """
+        value = """
+        (
+            SELECT u.*
+            FROM user u
+            JOIN friend f
+            ON f.proposer_email = :email
+            AND f.receiver_email = u.email
+            WHERE f.is_accepted = TRUE
+            AND u.account_id LIKE CONCAT('%', :accountId, '%')
+        )
+        UNION
+        (
+            SELECT u.*
+            FROM user u
+            JOIN friend f
+            ON f.receiver_email = :email
+            AND f.proposer_email = u.email
+            WHERE  f.is_accepted = TRUE
+            AND u.account_id LIKE CONCAT('%', :accountId, '%')
+        )
+        LIMIT :#{#pageable.pageSize} OFFSET :#{#pageable.offset}
+        """,
+        nativeQuery = true
     )
     fun findFriendUsersByEmailAndAccountIdContainsOffsetByPage(@Param("email") email: String, @Param("accountId") accountId: String, pageable: Pageable): List<User>
 
