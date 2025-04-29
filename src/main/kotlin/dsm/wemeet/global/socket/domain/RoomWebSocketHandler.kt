@@ -1,6 +1,8 @@
 package dsm.wemeet.global.socket.domain
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
+import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.global.error.exception.BadRequestException
@@ -22,7 +24,8 @@ import java.util.concurrent.CopyOnWriteArrayList
 class RoomWebSocketHandler(
     private val objectMapper: ObjectMapper,
     private val kickMemberUseCase: KickMemberUseCase,
-    private val leaveRoomUseCase: LeaveRoomUseCase
+    private val leaveRoomUseCase: LeaveRoomUseCase,
+    private val checkIsMemberUseCase: CheckIsMemberUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -30,6 +33,16 @@ class RoomWebSocketHandler(
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val roomId = getRoomId(session)
         val peers = roomPeers.computeIfAbsent(roomId) { CopyOnWriteArrayList() }
+
+        try {
+            // 멤버가 이 방에 포함되고 있는지 확인
+            checkIsMemberUseCase.execute(roomId, getUserEmail(session))
+
+            // 이미 세션에 들어와있는지
+            peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
+        } catch (e: Exception) {
+            session.close(CloseStatus.POLICY_VIOLATION)
+        }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
         val joinMsg = createMsg("join", objectMapper.writeValueAsString(session.toPeer()))
