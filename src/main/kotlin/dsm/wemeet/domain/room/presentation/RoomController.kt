@@ -3,9 +3,11 @@ package dsm.wemeet.domain.room.presentation
 import dsm.wemeet.domain.room.presentation.dto.request.CheckRoomPasswordRequest
 import dsm.wemeet.domain.room.presentation.dto.request.CreateRoomRequest
 import dsm.wemeet.domain.room.presentation.dto.response.CreateRoomResponse
+import dsm.wemeet.domain.room.presentation.dto.response.GetRoomDetailResponse
 import dsm.wemeet.domain.room.presentation.dto.response.QueryRoomListResponse
 import dsm.wemeet.domain.room.usecase.CheckRoomPasswordUseCase
 import dsm.wemeet.domain.room.usecase.CreateRoomUseCase
+import dsm.wemeet.domain.room.usecase.GetRoomDetailUseCase
 import dsm.wemeet.domain.room.usecase.JoinRoomUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.domain.room.usecase.QueryRoomListUseCase
@@ -30,7 +32,8 @@ class RoomController(
     private val joinRoomUseCase: JoinRoomUseCase,
     private val queryRoomListUseCase: QueryRoomListUseCase,
     private val leaveRoomUseCase: LeaveRoomUseCase,
-    private val checkRoomPasswordUseCase: CheckRoomPasswordUseCase
+    private val checkRoomPasswordUseCase: CheckRoomPasswordUseCase,
+    private val getRoomDetailUseCase: GetRoomDetailUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -77,5 +80,11 @@ class RoomController(
         request: CheckRoomPasswordRequest
     ) {
         checkRoomPasswordUseCase.execute(roomId, request)
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{room-id}")
+    fun getRoomDetails(@PathVariable("room-id") roomId: UUID): GetRoomDetailResponse {
+        return getRoomDetailUseCase.execute(roomId)
     }
 }
