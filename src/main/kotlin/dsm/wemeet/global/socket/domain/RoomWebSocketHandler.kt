@@ -5,6 +5,8 @@ import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
 import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
+import dsm.wemeet.domain.room.usecase.UpdateMemberPositionUseCase
+import dsm.wemeet.domain.user.repository.model.Position
 import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
@@ -25,7 +27,8 @@ class RoomWebSocketHandler(
     private val objectMapper: ObjectMapper,
     private val kickMemberUseCase: KickMemberUseCase,
     private val leaveRoomUseCase: LeaveRoomUseCase,
-    private val checkIsMemberUseCase: CheckIsMemberUseCase
+    private val checkIsMemberUseCase: CheckIsMemberUseCase,
+    private val updateMemberPositionUseCase: UpdateMemberPositionUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -47,12 +50,14 @@ class RoomWebSocketHandler(
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
         val joinMsg = createMsg("join", objectMapper.writeValueAsString(session.toPeer()))
         peers.forEach { peer ->
-            if (peer.isOpen) peer.sendMessage(TextMessage(joinMsg.toString()))
+            peer.takeIf { it.isOpen }
+                .let { peer.sendMessage(TextMessage(joinMsg.toString())) }
         }
 
         // 신규 피어에게 기존 멤버 정보 발송
         val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.toPeer() }))
-        session.sendMessage(TextMessage(existsPeerMsg.toString()))
+        session.takeIf { it.isOpen }
+            .let { session.sendMessage(TextMessage(existsPeerMsg.toString())) }
 
         peers += session
     }
@@ -85,7 +90,8 @@ class RoomWebSocketHandler(
             "offer", "answer", "candidate" -> {
                 signal.to?.let { targetEmail ->
                     peers.find { it.attributes["email"] == targetEmail }
-                        ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
+                        ?.takeIf { it.isOpen }
+                        ?.let { it.sendMessage(TextMessage(objectMapper.writeValueAsString(signal))) }
                 }
             }
 
@@ -100,7 +106,30 @@ class RoomWebSocketHandler(
 
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.close(CloseStatus(4003))
+                    ?.let { it.close(CloseStatus(4003)) }
+            }
+
+            "position" -> {
+                signal.data?.let {
+                    val position = Position.valueOf(it.get("position").asText())
+                    val mail = getUserEmail(session)
+
+                    updateMemberPositionUseCase.execute(roomId, mail, position)
+
+                    val positionMsg = Signal(
+                        type = signal.type,
+                        to = null,
+                        data = objectMapper.createObjectNode().apply {
+                            put("mail", mail)
+                            put("position", position.name)
+                        }
+                    )
+
+                    peers.forEach { peer ->
+                        peer.takeIf { it.isOpen }
+                            .let { peer.sendMessage(TextMessage(positionMsg.toString())) }
+                    }
+                }
             }
         }
     }
@@ -114,7 +143,8 @@ class RoomWebSocketHandler(
             // 남은 멤버에게 퇴장 발송
             val leaveMsg = createMsg("leave", objectMapper.writeValueAsString(session.toPeer()))
             list.forEach { peer ->
-                if (peer.isOpen) peer.sendMessage(TextMessage(leaveMsg.toString()))
+                peer.takeIf { it.isOpen }
+                    .let { peer.sendMessage(TextMessage(leaveMsg.toString())) }
             }
 
             if (list.isEmpty()) roomPeers.remove(roomId)
