@@ -50,14 +50,12 @@ class RoomWebSocketHandler(
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
         val joinMsg = createMsg("join", objectMapper.writeValueAsString(session.toPeer()))
         peers.forEach { peer ->
-            peer.takeIf { it.isOpen }
-                .let { peer.sendMessage(TextMessage(joinMsg.toString())) }
+            if (peer.isOpen) peer.sendMessage(TextMessage(joinMsg.toString()))
         }
 
         // 신규 피어에게 기존 멤버 정보 발송
         val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.toPeer() }))
-        session.takeIf { it.isOpen }
-            .let { session.sendMessage(TextMessage(existsPeerMsg.toString())) }
+        if (session.isOpen) session.sendMessage(TextMessage(existsPeerMsg.toString()))
 
         peers += session
     }
@@ -91,7 +89,7 @@ class RoomWebSocketHandler(
                 signal.to?.let { targetEmail ->
                     peers.find { it.attributes["email"] == targetEmail }
                         ?.takeIf { it.isOpen }
-                        ?.let { it.sendMessage(TextMessage(objectMapper.writeValueAsString(signal))) }
+                        ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
             }
 
@@ -106,7 +104,7 @@ class RoomWebSocketHandler(
 
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.let { it.close(CloseStatus(4003)) }
+                    ?.close(CloseStatus(4003))
             }
 
             "position" -> {
@@ -126,8 +124,7 @@ class RoomWebSocketHandler(
                     )
 
                     peers.forEach { peer ->
-                        peer.takeIf { it.isOpen }
-                            .let { peer.sendMessage(TextMessage(positionMsg.toString())) }
+                        if (peer.isOpen) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg.toString())))
                     }
                 }
             }
@@ -143,8 +140,7 @@ class RoomWebSocketHandler(
             // 남은 멤버에게 퇴장 발송
             val leaveMsg = createMsg("leave", objectMapper.writeValueAsString(session.toPeer()))
             list.forEach { peer ->
-                peer.takeIf { it.isOpen }
-                    .let { peer.sendMessage(TextMessage(leaveMsg.toString())) }
+                if (peer.isOpen) peer.sendMessage(TextMessage(leaveMsg.toString()))
             }
 
             if (list.isEmpty()) roomPeers.remove(roomId)
