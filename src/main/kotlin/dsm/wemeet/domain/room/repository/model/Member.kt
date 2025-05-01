@@ -35,5 +35,5 @@ class Member(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true, name = "position")
-    val position: Position? = null
+    var position: Position? = null
 )
