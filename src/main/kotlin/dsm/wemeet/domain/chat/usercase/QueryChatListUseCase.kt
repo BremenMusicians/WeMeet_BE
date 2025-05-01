@@ -8,17 +8,19 @@ import dsm.wemeet.domain.message.service.QueryMessageService
 import dsm.wemeet.domain.user.repository.model.Position
 import dsm.wemeet.domain.user.repository.model.User
 import dsm.wemeet.domain.user.service.QueryUserService
+import dsm.wemeet.global.s3.S3Util
 import org.springframework.stereotype.Service
 
 @Service
 class QueryChatListUseCase(
     private val queryChatService: QueryChatService,
     private val queryUserService: QueryUserService,
-    private val queryMessageService: QueryMessageService
+    private val queryMessageService: QueryMessageService,
+    private val s3Util: S3Util
 ) {
 
-    fun execute(): ChatListResponses {
-        val currentUser = queryUserService.getCurrentUser()
+    fun execute(mail: String): ChatListResponses {
+        val currentUser = queryUserService.queryUserByEmail(mail)
 
         val chats = queryChatService.queryChatsByUserOrderByRecent(currentUser.email)
             .map { chat ->
@@ -28,7 +30,7 @@ class QueryChatListUseCase(
                 ChatListResponse(
                     chatId = chat.id!!,
                     accountId = user.accountId,
-                    profile = user.profile,
+                    profile = user.profile?.let { s3Util.generateUrl(it) },
                     position = user.position.split(",").map { Position.valueOf(it) },
                     lastMessage = lastMessage?.content
                 )
