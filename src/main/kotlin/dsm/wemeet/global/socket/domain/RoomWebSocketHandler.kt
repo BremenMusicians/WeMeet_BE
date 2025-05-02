@@ -124,7 +124,7 @@ class RoomWebSocketHandler(
                     )
 
                     peers.forEach { peer ->
-                        if (peer.isOpen) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg.toString())))
+                        if (peer.isOpen) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
                     }
                 }
             }

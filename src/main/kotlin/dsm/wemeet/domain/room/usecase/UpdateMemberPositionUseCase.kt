@@ -18,7 +18,7 @@ class UpdateMemberPositionUseCase(
         val currentRoom = queryRoomService.queryRoomById(roomId)
         val currentUser = queryUserService.queryUserByEmail(userEmail)
 
-        val currentMember = queryRoomService.queryMemberByUserEmailAndRoomId(userEmail, roomId)
+        val currentMember = queryRoomService.queryMemberByUserEmailAndRoomId(currentUser.email, currentRoom.id!!)
 
         currentMember.position = position
     }
