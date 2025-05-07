@@ -96,7 +96,7 @@ class RoomWebSocketHandler(
                         ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
             }
-
+            // 강퇴
             "kick" -> {
                 val currentEmail = getUserEmail(session)
 
