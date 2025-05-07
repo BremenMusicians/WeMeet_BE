@@ -10,6 +10,8 @@ import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -30,6 +32,7 @@ class RoomWebSocketHandler(
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
+    private val logger: Logger = LoggerFactory.getLogger(RoomWebSocketHandler::class.java)
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val roomId = getRoomId(session)
@@ -45,6 +48,8 @@ class RoomWebSocketHandler(
             session.close(CloseStatus(1008, e.message)) // POLICY_VIOLATION
         } catch (e: Exception) {
             session.close(CloseStatus.SERVER_ERROR)
+            logger.error("유효 검증 중 예기치 못한 에러 발생", e)
+            return
         }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
