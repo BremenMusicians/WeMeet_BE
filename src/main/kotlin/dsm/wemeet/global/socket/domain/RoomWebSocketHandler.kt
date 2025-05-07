@@ -1,5 +1,6 @@
 package dsm.wemeet.global.socket.domain
 
+import WeMeetException
 import com.fasterxml.jackson.databind.ObjectMapper
 import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
 import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
@@ -40,8 +41,10 @@ class RoomWebSocketHandler(
 
             // 이미 세션에 들어와있는지
             peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
+        } catch (e: WeMeetException) {
+            session.close(CloseStatus(1008, e.message)) // POLICY_VIOLATION
         } catch (e: Exception) {
-            session.close(CloseStatus.POLICY_VIOLATION)
+            session.close(CloseStatus.SERVER_ERROR)
         }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
@@ -100,7 +103,7 @@ class RoomWebSocketHandler(
 
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.close(CloseStatus(4003))
+                    ?.close(CloseStatus(4003, "강퇴 당하셨습니다ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"))
             }
         }
     }
