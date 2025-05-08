@@ -6,6 +6,8 @@ import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
 import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
+import dsm.wemeet.domain.room.usecase.UpdateMemberPositionUseCase
+import dsm.wemeet.domain.user.repository.model.Position
 import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
@@ -28,7 +30,8 @@ class RoomWebSocketHandler(
     private val objectMapper: ObjectMapper,
     private val kickMemberUseCase: KickMemberUseCase,
     private val leaveRoomUseCase: LeaveRoomUseCase,
-    private val checkIsMemberUseCase: CheckIsMemberUseCase
+    private val checkIsMemberUseCase: CheckIsMemberUseCase,
+    private val updateMemberPositionUseCase: UpdateMemberPositionUseCase
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
@@ -60,7 +63,7 @@ class RoomWebSocketHandler(
 
         // 신규 피어에게 기존 멤버 정보 발송
         val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.toPeer() }))
-        session.sendMessage(TextMessage(existsPeerMsg.toString()))
+        if (session.isOpen) session.sendMessage(TextMessage(existsPeerMsg.toString()))
 
         peers += session
     }
@@ -86,13 +89,18 @@ class RoomWebSocketHandler(
         val roomId = getRoomId(session)
         val peers = roomPeers[roomId] ?: return
 
-        val signal = objectMapper.readValue(message.payload, Signal::class.java)
+        val signal = try {
+            objectMapper.readValue(message.payload, Signal::class.java)
+        } catch (e: Exception) {
+            return
+        }
 
         when (signal.type) {
             // WebRTC 연결 정보 관련 타입
             "offer", "answer", "candidate" -> {
                 signal.to?.let { targetEmail ->
                     peers.find { it.attributes["email"] == targetEmail }
+                        ?.takeIf { it.isOpen }
                         ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
             }
@@ -109,6 +117,34 @@ class RoomWebSocketHandler(
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
                     ?.close(CloseStatus(4003, "방장에게 강퇴당하셨습니다."))
+            }
+            // 포지션 변경
+            "position" -> {
+                signal.data?.let {
+                    val position = try {
+                        Position.valueOf(it.get("position").asText())
+                    } catch (e: Exception) {
+                        return
+                    }
+                    val mail = getUserEmail(session)
+
+                    updateMemberPositionUseCase.execute(roomId, mail, position)
+
+                    val positionMsg = Signal(
+                        type = signal.type,
+                        to = null,
+                        data = objectMapper.createObjectNode().apply {
+                            put("mail", mail)
+                            put("position", position.name)
+                        }
+                    )
+
+                    peers.forEach { peer ->
+                        if (peer.isOpen && peer.attributes["email"]!!.toString() != mail) {
+                            peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
+                        }
+                    }
+                }
             }
         }
     }
@@ -146,10 +182,10 @@ class RoomWebSocketHandler(
     private fun getProfile(session: WebSocketSession): String? =
         (session.attributes["profile"]!! as Optional<String>).orElse(null)
 
-    private fun createMsg(type: String, payload: String): JSONObject =
+    private fun createMsg(type: String, data: String): JSONObject =
         JSONObject()
             .put("type", type)
-            .put("payload", payload)
+            .put("data", data)
 
     private fun WebSocketSession.toPeer() = Peer(
         getUserEmail(this),

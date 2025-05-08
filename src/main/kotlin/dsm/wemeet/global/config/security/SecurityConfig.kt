@@ -54,7 +54,8 @@ class SecurityConfig(
                 .requestMatchers(HttpMethod.GET, "/rooms").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/rooms/{room-id}").authenticated()
                 .requestMatchers(HttpMethod.POST, "/rooms/password/{room-id}").authenticated()
-                .requestMatchers(HttpMethod.DELETE, "/rooms/{room-id}/members/{account-id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/rooms/{room-id}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/chat/list").authenticated()
                 .requestMatchers(HttpMethod.GET, "/message/{chat-id}").authenticated()
                 .anyRequest().denyAll()
         }
