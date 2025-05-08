@@ -27,6 +27,7 @@ class ChatWebSocketHandler(
     private val logger: Logger = LoggerFactory.getLogger(ChatWebSocketHandler::class.java)
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
+        // 세션에서 사용자 ID를 추출하여 세션과 연결
         userIdFromSession(session)?.let { userId ->
             sessionMap[userId] = session
             sendChatListToUser(userId)
@@ -43,7 +44,7 @@ class ChatWebSocketHandler(
 
             val (toUserId, content) = parseMessage(message.payload)
 
-            val result = saveMessageUseCase.execute(senderId, toUserId, content)
+            val savedMessage = saveMessageUseCase.execute(senderId, toUserId, content)
 
             sendChatListToUser(senderId)
             sendChatListToUser(toUserId)
@@ -51,19 +52,21 @@ class ChatWebSocketHandler(
             val receiverSession = sessionMap[toUserId]
             val responseJson = JSONObject()
                 .put("type", "MESSAGE")
-                .put("sender", result.sender)
-                .put("content", result.content)
-                .put("sendAt", result.sendAt)
+                .put("sender", savedMessage.sender)
+                .put("content", savedMessage.content)
+                .put("sendAt", savedMessage.sendAt)
 
             receiverSession?.takeIf { it.isOpen }?.sendMessage(TextMessage(responseJson.toString()))
         } catch (e: Exception) {
             logger.error("💥메시지 전송중 에러 발생: ${session.id}", e)
+            session.close(CloseStatus.SERVER_ERROR)
         }
     }
 
+    // 사용자의 채팅 목록을 가져와서 해당 사용자에게 전송
     private fun sendChatListToUser(mail: String) {
+        val session = sessionMap[mail] ?: return
         try {
-            val session = sessionMap[mail] ?: return
             if (!session.isOpen) return
 
             val chatListResponse = queryChatListUseCase.execute(mail)
@@ -75,11 +78,12 @@ class ChatWebSocketHandler(
             session.sendMessage(TextMessage(response.toString()))
         } catch (e: Exception) {
             logger.error("💥사용자 $mail 에게 채팅 목록을 전송하는 중 에러 발생", e)
+            session.close(CloseStatus.SERVER_ERROR)
         }
     }
 
     private fun parseMessage(payload: String): Pair<String, String> {
-        val json = JSONObject(payload)
+        val json = JSONObject(payload) // 메시지 페이로드를 JSON 객체로 파싱
         return json.getString("receiver") to json.getString("content")
     }
 
