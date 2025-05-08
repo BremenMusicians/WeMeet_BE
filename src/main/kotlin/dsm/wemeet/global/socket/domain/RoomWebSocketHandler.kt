@@ -108,7 +108,7 @@ class RoomWebSocketHandler(
 
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.close(CloseStatus(4003, "강퇴 당하셨습니다ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ"))
+                    ?.close(CloseStatus(4003, "방장에게 강퇴당하셨습니다."))
             }
         }
     }
