@@ -1,5 +1,6 @@
 package dsm.wemeet.global.socket.domain
 
+import WeMeetException
 import com.fasterxml.jackson.databind.ObjectMapper
 import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
 import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
@@ -9,6 +10,8 @@ import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -29,6 +32,7 @@ class RoomWebSocketHandler(
 ) : TextWebSocketHandler() {
 
     private val roomPeers: ConcurrentMap<UUID, CopyOnWriteArrayList<WebSocketSession>> = ConcurrentHashMap()
+    private val logger: Logger = LoggerFactory.getLogger(RoomWebSocketHandler::class.java)
 
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val roomId = getRoomId(session)
@@ -40,8 +44,12 @@ class RoomWebSocketHandler(
 
             // 이미 세션에 들어와있는지
             peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
+        } catch (e: WeMeetException) {
+            session.close(CloseStatus(1008, e.message)) // POLICY_VIOLATION
         } catch (e: Exception) {
-            session.close(CloseStatus.POLICY_VIOLATION)
+            session.close(CloseStatus.SERVER_ERROR)
+            logger.error("유효 검증 중 예기치 못한 에러 발생", e)
+            return
         }
 
         // 기존 멤버들에게 새로 참가하는 멤버 정보 전송
@@ -88,7 +96,7 @@ class RoomWebSocketHandler(
                         ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
                 }
             }
-
+            // 강퇴
             "kick" -> {
                 val currentEmail = getUserEmail(session)
 
@@ -100,7 +108,7 @@ class RoomWebSocketHandler(
 
                 peers.find { it.attributes["email"] == signal.to }
                     ?.takeIf { it.isOpen }
-                    ?.close(CloseStatus(4003))
+                    ?.close(CloseStatus(4003, "방장에게 강퇴당하셨습니다."))
             }
         }
     }
