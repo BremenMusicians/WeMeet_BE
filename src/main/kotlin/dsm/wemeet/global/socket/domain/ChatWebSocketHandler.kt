@@ -59,6 +59,7 @@ class ChatWebSocketHandler(
             receiverSession?.takeIf { it.isOpen }?.sendMessage(TextMessage(responseJson.toString()))
         } catch (e: Exception) {
             logger.error("💥메시지 전송중 에러 발생: ${session.id}", e)
+            session.close(CloseStatus.SERVER_ERROR)
         }
     }
 
@@ -77,6 +78,7 @@ class ChatWebSocketHandler(
             session.sendMessage(TextMessage(response.toString()))
         } catch (e: Exception) {
             logger.error("💥사용자 $mail 에게 채팅 목록을 전송하는 중 에러 발생", e)
+            session.close(CloseStatus.SERVER_ERROR)
         }
     }
 
