@@ -106,7 +106,7 @@ class RoomWebSocketHandler(
                     ?.takeIf { it.isOpen }
                     ?.close(CloseStatus(4003))
             }
-
+            // 포지션 변경
             "position" -> {
                 signal.data?.let {
                     val position = Position.valueOf(it.get("position").asText())
