@@ -117,7 +117,11 @@ class RoomWebSocketHandler(
             // 포지션 변경
             "position" -> {
                 signal.data?.let {
-                    val position = Position.valueOf(it.get("position").asText())
+                    val position = try {
+                        Position.valueOf(it.get("position").asText())
+                    } catch (e: Exception) {
+                        return
+                    }
                     val mail = getUserEmail(session)
 
                     updateMemberPositionUseCase.execute(roomId, mail, position)
@@ -132,7 +136,7 @@ class RoomWebSocketHandler(
                     )
 
                     peers.forEach { peer ->
-                        if (peer.isOpen) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
+                        if (peer.isOpen && peer.attributes["email"]!!.toString() != mail) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
                     }
                 }
             }
