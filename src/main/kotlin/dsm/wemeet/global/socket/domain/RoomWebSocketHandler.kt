@@ -180,10 +180,10 @@ class RoomWebSocketHandler(
     private fun getProfile(session: WebSocketSession): String? =
         (session.attributes["profile"]!! as Optional<String>).orElse(null)
 
-    private fun createMsg(type: String, payload: String): JSONObject =
+    private fun createMsg(type: String, data: String): JSONObject =
         JSONObject()
             .put("type", type)
-            .put("payload", payload)
+            .put("data", data)
 
     private fun WebSocketSession.toPeer() = Peer(
         getUserEmail(this),
