@@ -89,7 +89,11 @@ class RoomWebSocketHandler(
         val roomId = getRoomId(session)
         val peers = roomPeers[roomId] ?: return
 
-        val signal = objectMapper.readValue(message.payload, Signal::class.java)
+        val signal = try {
+            objectMapper.readValue(message.payload, Signal::class.java)
+        } catch (e: Exception) {
+            return
+        }
 
         when (signal.type) {
             // WebRTC 연결 정보 관련 타입
