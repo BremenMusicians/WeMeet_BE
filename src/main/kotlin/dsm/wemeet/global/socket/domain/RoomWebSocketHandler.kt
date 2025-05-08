@@ -140,7 +140,9 @@ class RoomWebSocketHandler(
                     )
 
                     peers.forEach { peer ->
-                        if (peer.isOpen && peer.attributes["email"]!!.toString() != mail) peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
+                        if (peer.isOpen && peer.attributes["email"]!!.toString() != mail) {
+                            peer.sendMessage(TextMessage(objectMapper.writeValueAsString(positionMsg)))
+                        }
                     }
                 }
             }
