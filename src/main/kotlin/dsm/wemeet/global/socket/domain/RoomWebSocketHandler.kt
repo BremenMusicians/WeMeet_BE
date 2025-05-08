@@ -124,7 +124,7 @@ class RoomWebSocketHandler(
                     val position = try {
                         Position.valueOf(it.get("position").asText())
                     } catch (e: Exception) {
-                        null
+                        return
                     }
                     val mail = getUserEmail(session)
 
@@ -135,7 +135,7 @@ class RoomWebSocketHandler(
                         to = null,
                         data = objectMapper.createObjectNode().apply {
                             put("mail", mail)
-                            put("position", position?.name ?: "null")
+                            put("position", position.name)
                         }
                     )
 
