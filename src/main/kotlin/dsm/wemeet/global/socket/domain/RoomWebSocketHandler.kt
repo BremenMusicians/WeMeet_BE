@@ -101,7 +101,18 @@ class RoomWebSocketHandler(
                 signal.to?.let { targetEmail ->
                     peers.find { it.attributes["email"] == targetEmail }
                         ?.takeIf { it.isOpen }
-                        ?.sendMessage(TextMessage(objectMapper.writeValueAsString(signal)))
+                        ?.sendMessage(
+                            TextMessage(
+                                objectMapper.writeValueAsString(
+                                    Signal(
+                                        type = signal.type,
+                                        from = getUserEmail(session),
+                                        to = null,
+                                        data = signal.data
+                                    )
+                                )
+                            )
+                        )
                 }
             }
             // 강퇴
@@ -130,14 +141,14 @@ class RoomWebSocketHandler(
 
                     updateMemberPositionUseCase.execute(roomId, mail, position)
 
-                    val positionMsg = Signal(
-                        type = signal.type,
-                        to = null,
-                        data = objectMapper.createObjectNode().apply {
-                            put("mail", mail)
-                            put("position", position.name)
-                        }
-                    )
+                    val positionMsg =
+                        Signal(
+                            type = signal.type,
+                            data = objectMapper.createObjectNode().apply {
+                                put("mail", mail)
+                                put("position", position.name)
+                            }
+                        )
 
                     peers.forEach { peer ->
                         if (peer.isOpen && peer.attributes["email"]!!.toString() != mail) {
