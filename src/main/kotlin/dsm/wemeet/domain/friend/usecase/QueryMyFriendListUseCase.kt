@@ -21,12 +21,12 @@ class QueryMyFriendListUseCase(
     fun execute(page: Int, name: String): MyFriendListResponse {
         val currentUser = queryUserService.getCurrentUser()
 
-        val users = queryFriendService.queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(currentUser.email, name, page)
+        val friends = queryFriendService.queryFriendUserListByEmailAndAccountIdContainsOffsetByPage(currentUser.email, name, page)
         val cnt = queryFriendService.countFriendsByEmailAndAccountIdContains(currentUser.email, name).toInt()
 
-        val friendsResponse = users.map {
-            val chat = queryChatService.queryChatByUser(it.email, currentUser.email)
+        val chatMap = queryChatService.queryChatsByUserEmails(currentUser.email, friends)
 
+        val friendsResponse = friends.map {
             MyFriendRequestResponse(
                 mail = it.email,
                 accountId = it.accountId,
@@ -34,7 +34,7 @@ class QueryMyFriendListUseCase(
                 aboutMe = it.aboutMe,
                 position = it.position.split(",").map(Position::valueOf),
                 isFriend = IsFriendType.FRIEND,
-                chatId = chat?.id
+                chatId = chatMap[it.email]?.id
             )
         }
 
