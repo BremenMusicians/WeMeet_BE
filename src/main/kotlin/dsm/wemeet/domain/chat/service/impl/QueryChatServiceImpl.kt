@@ -30,7 +30,7 @@ class QueryChatServiceImpl(
         return friendEmails.associateWith { email ->
             chats.find { chat ->
                 (chat.user1.email == userEmail && chat.user2.email == email) ||
-                    (chat.user1.email == userEmail && chat.user2.email == email)
+                    (chat.user2.email == userEmail && chat.user1.email == email)
             }
         }
     }
