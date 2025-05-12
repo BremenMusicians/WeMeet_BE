@@ -1,6 +1,7 @@
 package dsm.wemeet.domain.friend.presentation
 
 import dsm.wemeet.domain.friend.presentation.dto.response.FriendRequestListResponse
+import dsm.wemeet.domain.friend.presentation.dto.response.MyFriendListResponse
 import dsm.wemeet.domain.friend.presentation.dto.response.UserListResponse
 import dsm.wemeet.domain.friend.usecase.DeleteFriendUseCase
 import dsm.wemeet.domain.friend.usecase.HandleFriendRequestUseCase
@@ -59,7 +60,7 @@ class FriendController(
         @Min(0)
         page: Int,
         @RequestParam(value = "name", required = false, defaultValue = "") name: String
-    ): UserListResponse {
+    ): MyFriendListResponse {
         return queryMyFriendListUseCase.execute(page, name)
     }
 
