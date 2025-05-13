@@ -5,6 +5,7 @@ import dsm.wemeet.domain.chat.usercase.QueryChatListUseCase
 import dsm.wemeet.domain.message.usecase.SaveMessageUseCase
 import dsm.wemeet.global.jwt.JwtProvider
 import dsm.wemeet.global.jwt.exception.InvalidTokenException
+import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -73,7 +74,7 @@ class ChatWebSocketHandler(
 
             val response = JSONObject()
                 .put("type", "UPDATE_CHAT_LIST")
-                .put("chats", JSONObject(ObjectMapper().writeValueAsString(chatListResponse.chats)))
+                .put("chats", JSONArray(ObjectMapper().writeValueAsString(chatListResponse.chats)))
 
             session.sendMessage(TextMessage(response.toString()))
         } catch (e: Exception) {

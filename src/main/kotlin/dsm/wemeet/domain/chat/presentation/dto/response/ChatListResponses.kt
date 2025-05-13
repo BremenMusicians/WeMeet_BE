@@ -9,6 +9,7 @@ data class ChatListResponses(
 
 data class ChatListResponse(
     val chatId: UUID,
+    val mail: String,
     val accountId: String,
     val profile: String?,
     val position: List<Position>,
