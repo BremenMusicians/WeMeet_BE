@@ -104,11 +104,8 @@ class RoomWebSocketHandler(
                         ?.sendMessage(
                             TextMessage(
                                 objectMapper.writeValueAsString(
-                                    Signal(
-                                        type = signal.type,
-                                        from = getUserEmail(session),
-                                        to = null,
-                                        data = signal.data
+                                    signal.copy(
+                                        from = getUserEmail(session)
                                     )
                                 )
                             )
