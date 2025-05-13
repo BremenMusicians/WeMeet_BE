@@ -3,12 +3,12 @@ package dsm.wemeet.global.socket.domain
 import WeMeetException
 import com.fasterxml.jackson.databind.ObjectMapper
 import dsm.wemeet.domain.room.exception.AlreadyJoinedRoomException
+import dsm.wemeet.domain.room.exception.RoomNotFoundException
 import dsm.wemeet.domain.room.usecase.CheckIsMemberUseCase
 import dsm.wemeet.domain.room.usecase.KickMemberUseCase
 import dsm.wemeet.domain.room.usecase.LeaveRoomUseCase
 import dsm.wemeet.domain.room.usecase.UpdateMemberPositionUseCase
 import dsm.wemeet.domain.user.repository.model.Position
-import dsm.wemeet.global.error.exception.BadRequestException
 import dsm.wemeet.global.socket.vo.Peer
 import dsm.wemeet.global.socket.vo.Signal
 import org.json.JSONObject
@@ -177,7 +177,8 @@ class RoomWebSocketHandler(
         runCatching {
             UUID.fromString(session.attributes["roomId"]!!.toString())
         }.getOrElse {
-            throw BadRequestException
+            session.close(CloseStatus(1008, RoomNotFoundException.message))
+            throw RoomNotFoundException
         }
 
     // 이미 AuthorizerInterceptor 에서 타입 확인을 해줬음
