@@ -28,4 +28,17 @@ interface ChatJpaRepository : JpaRepository<Chat, UUID> {
         """
     )
     fun findChatsByUserOrderByRecent(@Param("email") user: String): List<Chat>
+
+    @Query(
+        """
+    SELECT c FROM Chat c 
+    WHERE 
+        (c.user1.email = :userEmail AND c.user2.email IN :friendEmails) OR 
+        (c.user2.email = :userEmail AND c.user1.email IN :friendEmails)
+    """
+    )
+    fun findChatsBetweenUserAndFriends(
+        @Param("userEmail") userEmail: String,
+        @Param("friendEmails") friendEmails: List<String>
+    ): List<Chat>
 }
