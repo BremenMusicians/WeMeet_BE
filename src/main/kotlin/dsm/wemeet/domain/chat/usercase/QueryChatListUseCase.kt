@@ -29,6 +29,7 @@ class QueryChatListUseCase(
 
                 ChatListResponse(
                     chatId = chat.id!!,
+                    mail = user.email,
                     accountId = user.accountId,
                     profile = user.profile?.let { s3Util.generateUrl(it) },
                     position = user.position.split(",").map { Position.valueOf(it) },
