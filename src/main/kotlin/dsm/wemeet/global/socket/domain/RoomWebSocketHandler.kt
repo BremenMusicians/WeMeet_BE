@@ -66,7 +66,7 @@ class RoomWebSocketHandler(
         val existsPeerMsg = createMsg("exist", objectMapper.writeValueAsString(peers.map { it.toPeer() }))
         if (session.isOpen) session.sendMessage(TextMessage(existsPeerMsg.toString()))
 
-        peers += session
+        peers.add(session)
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
