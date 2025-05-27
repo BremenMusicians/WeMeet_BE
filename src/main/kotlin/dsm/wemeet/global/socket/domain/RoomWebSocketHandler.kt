@@ -49,6 +49,7 @@ class RoomWebSocketHandler(
             peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
         } catch (e: WeMeetException) {
             session.close(CloseStatus(1008, "${e.errorCode.status}-${e.errorCode.message}")) // POLICY_VIOLATION
+            return
         } catch (e: Exception) {
             session.close(CloseStatus.SERVER_ERROR)
             logger.error("유효 검증 중 예기치 못한 에러 발생", e)
