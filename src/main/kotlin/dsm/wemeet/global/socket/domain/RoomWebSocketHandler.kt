@@ -178,7 +178,7 @@ class RoomWebSocketHandler(
         runCatching {
             UUID.fromString(session.attributes["roomId"]!!.toString())
         }.getOrElse {
-            session.close(CloseStatus(1008, RoomNotFoundException.message))
+            session.close(CloseStatus(1008, "${RoomNotFoundException.errorCode.status}-${RoomNotFoundException.errorCode.message}"))
             throw RoomNotFoundException
         }
 
