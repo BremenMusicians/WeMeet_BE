@@ -69,6 +69,7 @@ class RoomWebSocketHandler(
         peers.add(session)
     }
 
+    // 클라이언트에서 합주방 나가기 API와 함께 작동하므로 굳이 leaveRoomUseCase를 호출할 필요는 없음
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) = leaveAndCleanUp(session)
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
