@@ -43,7 +43,7 @@ class RoomWebSocketHandler(
 
         try {
             // 멤버가 이 방에 포함되고 있는지 확인
-//            checkIsMemberUseCase.execute(roomId, getUserEmail(session))
+            // checkIsMemberUseCase.execute(roomId, getUserEmail(session))
 
             // 이미 세션에 들어와있는지
             peers.find { getUserEmail(it) == getUserEmail(session) }?.let { throw AlreadyJoinedRoomException }
