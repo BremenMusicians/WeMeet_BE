@@ -29,4 +29,5 @@ class Chat(
 
     @Column(name = "last_sent_at", nullable = false)
     var lastSentAt: LocalDateTime = LocalDateTime.now()
+
 )
