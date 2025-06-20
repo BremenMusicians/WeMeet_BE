@@ -10,6 +10,7 @@ import dsm.wemeet.domain.user.service.QueryUserService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 @Service
 @Transactional
@@ -29,7 +30,7 @@ class SaveMessageUseCase(
 
         val message = Message(chat = chat, sender = sendUser, content = content)
 
-        val sendTime = LocalDateTime.now()
+        val sendTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
 
         saveMessageService.save(message)
         chat.lastSentAt = sendTime
