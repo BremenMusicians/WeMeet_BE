@@ -35,7 +35,7 @@ class UserController(
     private val existAccountIdUseCase: ExistAccountIdUseCase,
     private val userTokenRefreshUseCase: UserTokenRefreshUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
-    private val queyUserSimpleInfoUseCase: QueryUserSimpleInfoUseCase
+    private val queryUserSimpleInfoUseCase: QueryUserSimpleInfoUseCase
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -63,7 +63,7 @@ class UserController(
     fun existAccountId(@PathVariable(name = "account-id") accountId: String) = existAccountIdUseCase.execute(accountId)
 
     @GetMapping
-    fun getMySimpleInfo() = queyUserSimpleInfoUseCase.execute()
+    fun getMySimpleInfo() = queryUserSimpleInfoUseCase.execute()
 
     @PatchMapping("/update")
     fun updateUserInfo(
